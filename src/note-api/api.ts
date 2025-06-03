@@ -117,7 +117,6 @@ async function FetchSearchNotes(query: string, sort: SearchSort, size: number = 
   }
 
   const data = result.data;
-  console.log(`Fetching search results for query: ${query}`);
   return data;
 }
 

@@ -45,6 +45,7 @@ function SearchPage() {
 
 	function fetchResults(query: string) {
 		FetchSearchNotes(query, "popular", 10).then(data => {
+			console.log(`Fetching search results for query: ${query}`);
 			const result = data.data.notes.contents.map(note => {
 				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
 			});
