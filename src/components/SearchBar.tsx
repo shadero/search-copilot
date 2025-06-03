@@ -8,7 +8,7 @@ function SearchBar({initialQuery, setQuery, onSubmit }: SearchBarProps) {
 	return (
 		<form onSubmit={onSubmit}>
 			<input
-				type="text"
+				type="search"
 				placeholder="Search..."
 				value={initialQuery}
 				onChange={e => setQuery(e.target.value)}
