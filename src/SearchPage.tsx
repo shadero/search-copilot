@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import FetchSearchNotes from './note-api/api';
+import FetchSearchNotes from './note-api/searches';
 import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
 
