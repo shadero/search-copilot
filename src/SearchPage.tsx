@@ -44,9 +44,8 @@ function SearchPage() {
 	};
 
 	useEffect(() => {
-		const initialQuery = searchParams.get("q") || "";
-		if (initialQuery) {
-			fetchResults(initialQuery);
+		if (query) {
+			fetchResults(query);
 		}
 	}, []);
 
