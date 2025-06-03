@@ -1,16 +1,16 @@
 type SearchBarProps = {
-	query: string;
+	initialQuery: string;
 	setQuery: (query: string) => void;
 	onSubmit?: (event: React.FormEvent) => void;
 };
 
-function SearchBar({ query, setQuery, onSubmit }: SearchBarProps) {
+function SearchBar({initialQuery, setQuery, onSubmit }: SearchBarProps) {
 	return (
 		<form onSubmit={onSubmit}>
 			<input
 				type="text"
 				placeholder="Search..."
-				value={query}
+				value={initialQuery}
 				onChange={e => setQuery(e.target.value)}
 			/>
 			<button type="submit">Search</button>

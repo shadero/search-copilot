@@ -55,7 +55,7 @@ function SearchPage() {
 	));
 	return (
 		<>
-			<SearchBar query={query} setQuery={setQuery} onSubmit={handleSubmit} />
+			<SearchBar initialQuery={query} setQuery={setQuery} onSubmit={handleSubmit} />
 			<ResultTable headers={headers} rows={rows} />
 		</>
 	);
