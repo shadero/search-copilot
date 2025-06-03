@@ -2,37 +2,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import FetchSearchNotes from './note-api/api';
 import SearchBar from "./components/SearchBar";
+import ResultTable from "./components/ResultTable";
 
 type SearchResult = {
 	name: string,
 	url: string
 };
 
-function SearchRow({ name, url }: SearchResult) {
+function SearchResultRow({ name, url }: SearchResult) {
 	return (
 		<tr>
 			<td>{name}</td>
 			<td><a href={url}>{url}</a></td>
 		</tr>
-	);
-}
-
-function SearchResultTable({ results }: { results: SearchResult[] }) {
-	const rows = results.map((result, index) => (
-		<SearchRow key={index} name={result.name} url={result.url} />
-	));
-	return (
-		<table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>URL</th>
-				</tr>
-			</thead>
-			<tbody>
-				{rows}
-			</tbody>
-		</table>
 	);
 }
 
@@ -68,10 +50,14 @@ function SearchPage() {
 		}
 	}, []);
 
+	const headers = ["Name", "URL"];
+	const rows = results.map((result, index) => (
+		<SearchResultRow key={index} name={result.name} url={result.url} />
+	));
 	return (
 		<>
 			<SearchBar query={query} setQuery={setQuery} onSubmit={handleSubmit} />
-			<SearchResultTable results={results.length > 0 ? results : []} />
+			<ResultTable headers={headers} rows={rows} />
 		</>
 	);
 }
