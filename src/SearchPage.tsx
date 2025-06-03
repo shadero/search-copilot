@@ -36,7 +36,7 @@ function SearchResultTable({ results }: { results: SearchResult[] }) {
 	);
 }
 
-function Search() {
+function SearchPage() {
 	const searchParams = new URLSearchParams(useLocation().search);
 	const initialQuery = searchParams.get("q") || "";
 	const [query, setQuery] = useState<string>(initialQuery);
@@ -71,4 +71,4 @@ function Search() {
 	);
 }
 
-export default Search;
+export default SearchPage;

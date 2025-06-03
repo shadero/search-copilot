@@ -4,14 +4,14 @@ import {
   Routes
 } from "react-router-dom";
 import App from "../App";
-import Search from "../Search";
+import SearchPage from "../SearchPage";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App />} />
-        <Route path='/search' element={<Search />} />
+        <Route path='/search' element={<SearchPage />} />
       </Routes>
     </BrowserRouter>
   )
