@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import FetchSearchNotes from './note-api/api';
 import SearchBar from "./components/SearchBar";
 
@@ -37,11 +37,10 @@ function SearchResultTable({ results }: { results: SearchResult[] }) {
 }
 
 function SearchPage() {
-	const searchParams = new URLSearchParams(useLocation().search);
+	const [searchParams, setSearchParams] = useSearchParams();
 	const initialQuery = searchParams.get("q") || "";
 	const [query, setQuery] = useState<string>(initialQuery);
 	const [results, setResults] = useState<SearchResult[]>([]);
-	const navigate = useNavigate();
 
 	function fetchResults(query: string) {
 		FetchSearchNotes(query, "popular", 10).then(data => {
@@ -58,12 +57,7 @@ function SearchPage() {
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		if (query.trim()) {
-			navigate(`/search?q=${encodeURIComponent(query)}`);
-		}
-		else {
-			navigate("/search");
-		}
+		setSearchParams({q: query.trim()});
 		fetchResults(query);
 	};
 
