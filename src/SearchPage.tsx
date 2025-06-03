@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FetchSearchNotes from './note-api/api';
 import SearchBar from "./components/SearchBar";
@@ -43,25 +43,35 @@ function SearchPage() {
 	const [results, setResults] = useState<SearchResult[]>([]);
 	const navigate = useNavigate();
 
+	function fetchResults(query: string) {
+		FetchSearchNotes(query, "popular", 10).then(data => {
+			const result = data.data.notes.contents.map(note => {
+				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
+			});
+			setResults(result);
+		}).catch(error => {
+			console.error("Error fetching search results:", error);
+			setResults([]);
+		});
+	}
+
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
 		if (query.trim()) {
 			navigate(`/search?q=${encodeURIComponent(query)}`);
 		}
-
-		const fetchData = async () => {
-			const data = await FetchSearchNotes(query, "popular", 10);
-			const result = data.data.notes.contents.map(note => {
-				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
-			});
-			setResults(result);
-		};
-		if (query) {
-			fetchData();
-		} else {
-			setResults([]);
+		else {
+			navigate("/search");
 		}
+		fetchResults(query);
 	};
+
+	useEffect(() => {
+		const initialQuery = searchParams.get("q") || "";
+		if (initialQuery) {
+			fetchResults(initialQuery);
+		}
+	}, []);
 
 	return (
 		<>
