@@ -7,7 +7,7 @@ import App from "../App";
 import SearchPage from "../SearchPage";
 import SuggestKeywordsPage from "../SuggestKeywordsPage";
 
-const AppRoutes = () => {
+export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
@@ -18,5 +18,3 @@ const AppRoutes = () => {
     </BrowserRouter>
   )
 }
-
-export default AppRoutes;

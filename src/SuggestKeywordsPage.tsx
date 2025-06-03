@@ -1,9 +1,9 @@
 import { useSearchParams } from "react-router-dom";
 import ResultTable from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function SuggestResultRow({keyword}: { keyword: string }) {
+function SuggestResultRow({ keyword }: { keyword: string }) {
 	return (
 		<tr>
 			<td>{keyword}</td>

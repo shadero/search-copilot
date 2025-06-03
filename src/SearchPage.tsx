@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import FetchSearchNotes from './note-api/searches';
 import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
+import { useQueryStates } from "nuqs";
+import z from "zod";
 
 type SearchResult = {
 	name: string,
@@ -19,8 +20,10 @@ function SearchResultRow({ name, url }: SearchResult) {
 }
 
 function SearchPage() {
-	const [searchParams, setSearchParams] = useSearchParams();
-	const [query, setQuery] = useState<string>("");
+	const [queryParam, setQueryParam] = useQueryStates({
+		query: z.string().optional()
+	});
+	const [inputQuery, setInputQuery] = useState<string>("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 
 	function fetchResults(query: string) {
@@ -38,14 +41,14 @@ function SearchPage() {
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		setSearchParams({ q: query.trim() });
+		setQueryParam({ query: inputQuery.trim() });
 	};
 
 	useEffect(() => {
-		const q = searchParams.get("q") || "";
-		setQuery(q.trim());
+		const q = queryParam.query || "";
+		setInputQuery(q.trim());
 		fetchResults(q);
-	}, [searchParams]);
+	}, [queryParam]);
 
 	const headers = ["Name", "URL"];
 	const rows = results.map((result, index) => (
@@ -53,7 +56,7 @@ function SearchPage() {
 	));
 	return (
 		<>
-			<SearchBar initialQuery={query} setQuery={setQuery} onSubmit={handleSubmit} />
+			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
 			<ResultTable headers={headers} rows={rows} />
 		</>
 	);
