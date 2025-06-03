@@ -105,9 +105,15 @@ type CursorData = {
   note_for_sale: string;
 };
 
-type SearchSort = 'popular' | 'hot' | 'new';
+export const SEARCH_SORTS = ['popular', 'hot', 'new'] as const;
+export type SearchSort = typeof SEARCH_SORTS[number];
 
-async function FetchSearchNotes(query: string, sort: SearchSort, size: number = 4, start: number = 0): Promise<SearchesResponseModel> {
+async function FetchSearchNotes(
+  query: string,
+  sort: SearchSort = 'popular',
+  size: number = 10,
+  start: number = 0
+): Promise<SearchesResponseModel> {
   const baseUrl = 'http://localhost:8080/https://note.com';
   const result = await axios.get<SearchesResponseModel>(
     `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size}&start=${start}&sort=${sort}`

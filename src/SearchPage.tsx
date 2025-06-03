@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import FetchSearchNotes from './note-api/searches';
+import FetchSearchNotes, { SEARCH_SORTS, type SearchSort } from './note-api/searches';
 import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
-import { useQueryStates } from "nuqs";
-import z from "zod";
+import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 
 type SearchResult = {
 	name: string,
@@ -20,14 +19,18 @@ function SearchResultRow({ name, url }: SearchResult) {
 }
 
 function SearchPage() {
-	const [queryParam, setQueryParam] = useQueryStates({
-		query: z.string().optional()
-	});
+	const [queryParam, setQueryParam] = useQueryStates(
+		{
+			query: parseAsString.withDefault(""),
+			sort: parseAsStringLiteral(SEARCH_SORTS).withDefault("popular"),
+			size: parseAsInteger.withDefault(10),
+		},
+		{ history: "push" });
 	const [inputQuery, setInputQuery] = useState<string>("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 
-	function fetchResults(query: string) {
-		FetchSearchNotes(query, "popular", 10).then(data => {
+	function fetchResults(query: string, sort: SearchSort = "popular", size: number = 10) {
+		FetchSearchNotes(query, sort, size).then(data => {
 			console.log(`Fetching search results for query: ${query}`);
 			const result = data.data.notes.contents.map(note => {
 				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
@@ -45,9 +48,8 @@ function SearchPage() {
 	};
 
 	useEffect(() => {
-		const q = queryParam.query || "";
-		setInputQuery(q.trim());
-		fetchResults(q);
+		setInputQuery(queryParam.query);
+		fetchResults(queryParam.query, queryParam.sort!, queryParam.size);
 	}, [queryParam]);
 
 	const headers = ["Name", "URL"];
