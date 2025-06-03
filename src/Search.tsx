@@ -11,7 +11,6 @@ type SearchResult = {
 function SearchRow({ name, url }: SearchResult) {
 	return (
 		<tr>
-			{/* <td><a href={url}>{name}</a></td> */}
 			<td>{name}</td>
 			<td><a href={url}>{url}</a></td>
 		</tr>
