@@ -20,8 +20,7 @@ function SearchResultRow({ name, url }: SearchResult) {
 
 function SearchPage() {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const initialQuery = searchParams.get("q") || "";
-	const [query, setQuery] = useState<string>(initialQuery);
+	const [query, setQuery] = useState<string>("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 
 	function fetchResults(query: string) {
@@ -39,15 +38,14 @@ function SearchPage() {
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		setSearchParams({q: query.trim()});
-		fetchResults(query);
+		setSearchParams({ q: query.trim() });
 	};
 
 	useEffect(() => {
-		if (query) {
-			fetchResults(query);
-		}
-	}, []);
+		const q = searchParams.get("q") || "";
+		setQuery(q.trim());
+		fetchResults(q);
+	}, [searchParams]);
 
 	const headers = ["Name", "URL"];
 	const rows = results.map((result, index) => (
