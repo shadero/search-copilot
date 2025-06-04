@@ -31,7 +31,6 @@ export default function SearchPage() {
 			size: parseAsInteger.withDefault(10),
 		},
 		{ history: "push" });
-	const [inputQuery, setInputQuery] = useState<string>("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 
 	async function fetchResults(
@@ -55,20 +54,18 @@ export default function SearchPage() {
 		return result;
 	}
 
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
-		setQueryParam({ query: inputQuery.trim() });
+	const handleSubmit = (query: string) => {
+		setQueryParam({ query: query.trim() });
 	};
 
 	useEffect(() => {
-		setInputQuery(queryParam.query);
 		fetchResults(queryParam.query, queryParam.sort!, queryParam.size).then(setResults);
 	}, [queryParam]);
 
 	function MainContent() {
 		return (
 			<>
-				<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
+				<SearchBar initialQuery={queryParam.query} onSearch={handleSubmit} />
 				<OptionSelectBox
 					name="表示件数"
 					map={{

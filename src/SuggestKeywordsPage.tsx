@@ -29,8 +29,7 @@ export default function SuggestKeywordsPage() {
 		},
 		{ history: "push" }
 	);
-	const [inputQuery, setInputQuery] = useState<string>("");
-	const [results, setResults] = useState<SuggestKeywordResult[]>([{ name: `Keyword 1` }]);
+	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
 	function hashtagData2Result(data: HashtagData): SuggestKeywordResult[] {
 		return data.contents.map(content => ({ name: content.name }));
@@ -40,13 +39,11 @@ export default function SuggestKeywordsPage() {
 		return data.map(content => ({ name: content.name }));
 	}
 
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
-		setQueryParams({ query: inputQuery.trim() });
+	const handleSearch = (query: string) => {
+		setQueryParams({ query: query.trim() });
 	};
 
 	useEffect(() => {
-		setInputQuery(queryParams.query);
 		if (queryParams.related) {
 			FetchRelatedHashtags(baseUrl, queryParams.query)
 				.then(relatedHashtag2Result)
@@ -63,7 +60,7 @@ export default function SuggestKeywordsPage() {
 	function MainContent() {
 		return (
 			<>
-				<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
+				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
 				<OptionSelectBox
 					name="表示件数"
 					map={{
@@ -101,6 +98,8 @@ export default function SuggestKeywordsPage() {
 	}
 
 	return (
-		<Template body={<MainContent />}></Template>
+		<>
+			<Template body={<MainContent />}></Template>
+		</>
 	);
 }

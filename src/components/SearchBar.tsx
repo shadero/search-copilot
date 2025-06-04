@@ -1,10 +1,15 @@
 type SearchBarProps = {
 	initialQuery: string;
-	setQuery: (query: string) => void;
-	onSubmit?: (event: React.FormEvent) => void;
+	onSearch?: (query: string) => void;
 };
 
-function SearchBar({ initialQuery, setQuery, onSubmit }: SearchBarProps) {
+function SearchBar({ initialQuery, onSearch: onSearch }: SearchBarProps) {
+	function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		const input = event.currentTarget.querySelector('input[type="search"]') as HTMLInputElement;
+		onSearch?.(input.value);
+	}
+
 	return (
 		<form onSubmit={onSubmit}>
 			<label className="input">
@@ -24,8 +29,7 @@ function SearchBar({ initialQuery, setQuery, onSubmit }: SearchBarProps) {
 					required
 					className="grow"
 					placeholder="Search"
-					value={initialQuery}
-					onChange={e => setQuery(e.target.value)}
+					defaultValue={initialQuery}
 				/>
 			</label>
 		</form>
