@@ -3,6 +3,7 @@ import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { FetchHashtags } from "./note-api/searches";
+import OptionSelectBox from "./components/OptionSelectBox";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -55,8 +56,20 @@ export default function SuggestKeywordsPage() {
 	return (
 		<>
 			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
+			<OptionSelectBox
+				map={{
+					10: "10件",
+					15: "15件",
+					20: "20件",
+					25: "25件",
+					50: "50件",
+				}}
+				onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
+				defaultValue={queryParams.size.toString()}
+			/>
+			<p>検索結果: {results.length}件</p>
 			<ResultTable
-				headers={["Keyword"]}
+				headers={["Suggested Keywords"]}
 				rows={
 					results.map(
 						(result, index) => (<SuggestResultRow key={index} name={result.name} />)
