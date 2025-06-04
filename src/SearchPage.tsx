@@ -5,6 +5,7 @@ import ResultTable from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import OptionSelectBox from "./components/OptionSelectBox";
 import Template from "./components/Template";
+import FetchNotesByHashtag from "./note-api/searchNotesByHashtag";
 
 type SearchResult = {
 	name: string,
@@ -71,6 +72,26 @@ export default function SearchPage() {
 		size: number = 10
 	): Promise<SearchResult[]> {
 		console.log(`Fetching search results for query: ${query}`);
+
+		// ハッシュタグ検索
+		if (query.startsWith("#")) {
+			const hashtag = query.slice(1);
+			const result = FetchNotesByHashtag(baseUrl, hashtag, sort)
+				.then(data => {
+					return data.data.notes.map(
+						note => {
+							const url = `https://note.com/${note.user.urlname}/n/${note.key}`;
+							return { name: note.name, url: url } as SearchResult;
+						}
+					);
+				}).catch(error => {
+					console.error("Error fetching hashtag search results:", error);
+					return [];
+				});
+			return result;
+		}
+
+		// 通常のキーワード検索
 		const result = FetchSearchNotes(baseUrl, query, sort, size)
 			.then(data => {
 				return data.contents.map(
