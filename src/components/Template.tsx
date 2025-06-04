@@ -28,8 +28,8 @@ export default function Template({ body }: { body: React.ReactNode }) {
 			<div className="drawer-side z-40 lg:drawer-open">
 				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
 				<ul className="menu bg-base-200 min-h-full w-80 p-4">
-					<li><a>Search</a></li>
-					<li><a>Keyword Suggest</a></li>
+					<li><a href="/search">Search</a></li>
+					<li><a href="/suggestKeywords">Keyword Suggest</a></li>
 				</ul>
 			</div>
 		</div>
