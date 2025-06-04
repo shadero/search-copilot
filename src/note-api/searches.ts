@@ -113,7 +113,7 @@ async function FetchSearchNotes(
   sort: SearchSort = 'popular',
   size: number = 10,
   start: number = 0
-): Promise<SearchesResponseModel> {
+): Promise<NotesData> {
   const baseUrl = 'http://localhost:8080/https://note.com';
   const result = await axios.get<SearchesResponseModel>(
     `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size}&start=${start}&sort=${sort}`
@@ -123,7 +123,7 @@ async function FetchSearchNotes(
   }
 
   const data = result.data;
-  return data;
+  return data.data.notes;
 }
 
 export default FetchSearchNotes;

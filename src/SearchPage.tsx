@@ -33,7 +33,7 @@ export default function SearchPage() {
 	function fetchResults(query: string, sort: SearchSort = "popular", size: number = 10) {
 		FetchSearchNotes(query, sort, size).then(data => {
 			console.log(`Fetching search results for query: ${query}`);
-			const result = data.data.notes.contents.map(note => {
+			const result = data.contents.map(note => {
 				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
 			});
 			setResults(result);
