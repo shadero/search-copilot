@@ -4,18 +4,11 @@ import axios from "axios";
 // 未使用の変数の型はあまり確認していないので、注意してください。
 type SearchesResponseModel = {
   data: {
-    note_cursor: string;
-    user_cursor: string;
-    magazine_cursor: string;
-    hashtag_cursor: string;
-    circle_cursor: string;
-    note_for_sale_cursor: string;
     notes: NotesData;
     magazines: Record<string, unknown>;
     users: Record<string, unknown>;
-    hashtags: Record<string, unknown>;
+    hashtags: HashtagData;
     circles: Record<string, unknown>;
-    notes_for_sale: Record<string, unknown>;
     cursor: CursorData;
   };
 };
@@ -70,6 +63,20 @@ type Note = {
   price_info: PriceInfo;
 };
 
+type HashtagData = {
+  is_last_page: boolean | null;
+  contents: Hashtag[];
+  top_search_contents: any[]; // 検索上位の構造が不明なので any[]
+  total_count: number;
+  rounded_total_count: number;
+};
+
+type Hashtag = {
+  id: number;
+  name: string;
+  count: number;
+};
+
 type User = {
   id: number;
   key: string;
@@ -107,6 +114,7 @@ type CursorData = {
 
 export const SEARCH_SORTS = ['popular', 'hot', 'new'] as const;
 export type SearchSort = typeof SEARCH_SORTS[number];
+const baseUrl = 'http://localhost:8080/https://note.com';
 
 async function FetchSearchNotes(
   query: string,
@@ -114,16 +122,24 @@ async function FetchSearchNotes(
   size: number = 10,
   start: number = 0
 ): Promise<NotesData> {
-  const baseUrl = 'http://localhost:8080/https://note.com';
   const result = await axios.get<SearchesResponseModel>(
     `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size}&start=${start}&sort=${sort}`
   );
   if (result.status !== 200) {
-    throw new Error(`Failed to fetch search results: ${result.statusText}`);
+    throw new Error(`Failed to fetch notes: ${result.statusText}`);
   }
 
-  const data = result.data;
-  return data.data.notes;
+  return result.data.data.notes;
+}
+
+export async function FetchHashtags(query: string, size: number = 10, start: number = 0): Promise<HashtagData> {
+  const result = await axios.get<SearchesResponseModel>(
+    `${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size}&start=${start}`
+  );
+  if (result.status !== 200) {
+    throw new Error(`Failed to fetch hashtags: ${result.statusText}`);
+  }
+  return result.data.data.hashtags;
 }
 
 export default FetchSearchNotes;
