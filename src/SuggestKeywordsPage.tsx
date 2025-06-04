@@ -1,9 +1,10 @@
 import ResultTable from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
-import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
-import { FetchHashtags } from "./note-api/searches";
+import { parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { FetchHashtags, type HashtagData } from "./note-api/searches";
 import OptionSelectBox from "./components/OptionSelectBox";
+import { FetchRelatedHashtags, type RelatedHashtag } from "./note-api/hashtags";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -18,29 +19,24 @@ function SuggestResultRow({ name }: SuggestKeywordResult) {
 }
 
 export default function SuggestKeywordsPage() {
+	const baseUrl = 'http://localhost:8080/https://note.com';
 	const [queryParams, setQueryParams] = useQueryStates(
 		{
 			query: parseAsString.withDefault(""),
 			size: parseAsInteger.withDefault(10),
+			related: parseAsBoolean.withDefault(false),
 		},
 		{ history: "push" }
 	);
 	const [inputQuery, setInputQuery] = useState<string>("");
 	const [results, setResults] = useState<SuggestKeywordResult[]>([{ name: `Keyword 1` }]);
 
-	async function fetchResults(query: string, size: number = 10): Promise<SuggestKeywordResult[]> {
-		console.log(`Fetching search results for query: ${query}`);
-		const result = await FetchHashtags(query, size)
-			.then(data => {
-				return data.contents.map(
-					content => { return { name: content.name }; }
-				);
-			})
-			.catch(error => {
-				console.error("Error fetching search results:", error);
-				return [];
-			});
-		return result;
+	function hashtagData2Result(data: HashtagData): SuggestKeywordResult[] {
+		return data.contents.map(content => ({ name: content.name }));
+	}
+
+	function relatedHashtag2Result(data: RelatedHashtag[]): SuggestKeywordResult[] {
+		return data.map(content => ({ name: content.name }));
 	}
 
 	const handleSubmit = (event: React.FormEvent) => {
@@ -50,7 +46,17 @@ export default function SuggestKeywordsPage() {
 
 	useEffect(() => {
 		setInputQuery(queryParams.query);
-		fetchResults(queryParams.query, queryParams.size).then(setResults);
+		if (queryParams.related) {
+			FetchRelatedHashtags(baseUrl, queryParams.query)
+				.then(relatedHashtag2Result)
+				.then(setResults)
+				.catch(() => { setResults([]); });
+		} else {
+			FetchHashtags(baseUrl, queryParams.query, queryParams.size)
+				.then(hashtagData2Result)
+				.then(setResults)
+				.catch(() => { setResults([]); });
+		}
 	}, [queryParams]);
 
 	return (
@@ -67,9 +73,17 @@ export default function SuggestKeywordsPage() {
 				onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
 				defaultValue={queryParams.size.toString()}
 			/>
+			<OptionSelectBox
+				map={{
+					false: "サジェストキーワード",
+					true: "関連キーワード",
+				}}
+				onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
+				defaultValue={queryParams.related.toString()}
+			/>
 			<p>検索結果: {results.length}件</p>
 			<ResultTable
-				headers={["Suggested Keywords"]}
+				headers={["Keywords"]}
 				rows={
 					results.map(
 						(result, index) => (<SuggestResultRow key={index} name={result.name} />)

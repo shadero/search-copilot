@@ -20,6 +20,7 @@ function SearchResultRow({ name, url }: SearchResult) {
 }
 
 export default function SearchPage() {
+	const baseUrl = 'http://localhost:8080/https://note.com';
 	const [queryParam, setQueryParam] = useQueryStates(
 		{
 			query: parseAsString.withDefault(""),
@@ -36,7 +37,7 @@ export default function SearchPage() {
 		size: number = 10
 	): Promise<SearchResult[]> {
 		console.log(`Fetching search results for query: ${query}`);
-		const result = FetchSearchNotes(query, sort, size)
+		const result = FetchSearchNotes(baseUrl, query, sort, size)
 			.then(data => {
 				return data.contents.map(
 					note => {

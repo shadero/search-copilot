@@ -63,7 +63,7 @@ type Note = {
   price_info: PriceInfo;
 };
 
-type HashtagData = {
+export type HashtagData = {
   is_last_page: boolean | null;
   contents: Hashtag[];
   top_search_contents: any[]; // 検索上位の構造が不明なので any[]
@@ -114,9 +114,9 @@ type CursorData = {
 
 export const SEARCH_SORTS = ['popular', 'hot', 'new'] as const;
 export type SearchSort = typeof SEARCH_SORTS[number];
-const baseUrl = 'http://localhost:8080/https://note.com';
 
 async function FetchSearchNotes(
+  baseUrl: string,
   query: string,
   sort: SearchSort = 'popular',
   size: number = 10,
@@ -132,14 +132,15 @@ async function FetchSearchNotes(
   return result.data.data.notes;
 }
 
-export async function FetchHashtags(query: string, size: number = 10, start: number = 0): Promise<HashtagData> {
-  const result = await axios.get<SearchesResponseModel>(
-    `${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size}&start=${start}`
-  );
-  if (result.status !== 200) {
-    throw new Error(`Failed to fetch hashtags: ${result.statusText}`);
+export async function FetchHashtags(baseUrl: string, query: string, size: number = 10, start: number = 0): Promise<HashtagData> {
+  try {
+    const result = await axios.get<SearchesResponseModel>(
+      `${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size}&start=${start}`
+    );
+    return result.data.data.hashtags;
+  } catch (error) {
+    throw error;
   }
-  return result.data.data.hashtags;
 }
 
 export default FetchSearchNotes;
