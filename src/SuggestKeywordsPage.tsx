@@ -11,7 +11,7 @@ function SuggestResultRow({ keyword }: { keyword: string }) {
 	);
 }
 
-function SuggestKeywordsPage() {
+export default function SuggestKeywordsPage() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const initialQuery = searchParams.get("q") || "";
 	const [query, setQuery] = useState<string>(initialQuery);
@@ -31,5 +31,3 @@ function SuggestKeywordsPage() {
 		</>
 	);
 }
-
-export default SuggestKeywordsPage;

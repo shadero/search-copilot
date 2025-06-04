@@ -19,7 +19,7 @@ function SearchResultRow({ name, url }: SearchResult) {
 	);
 }
 
-function SearchPage() {
+export default function SearchPage() {
 	const [queryParam, setQueryParam] = useQueryStates(
 		{
 			query: parseAsString.withDefault(""),
@@ -88,5 +88,3 @@ function SearchPage() {
 		</>
 	);
 }
-
-export default SearchPage;
