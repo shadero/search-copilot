@@ -66,7 +66,7 @@ export default function SearchPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParam.query} onSearch={handleSubmit} />
-				<div className="flex gap-4 items-end mb-4">
+				<div className="flex gap-4 items-end mt-4">
 					<OptionSelectBox
 						name="表示件数"
 						map={{
@@ -90,6 +90,7 @@ export default function SearchPage() {
 						defaultValue={queryParam.sort}
 					/>
 				</div>
+				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-3xl">
 					<ResultTable

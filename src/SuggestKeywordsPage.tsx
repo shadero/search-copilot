@@ -61,7 +61,7 @@ export default function SuggestKeywordsPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
-				<div className="flex gap-4 items-end mb-4">
+				<div className="flex gap-4 items-end mt-4">
 					<OptionSelectBox
 						name="表示件数"
 						map={{
@@ -84,7 +84,7 @@ export default function SuggestKeywordsPage() {
 						defaultValue={queryParams.related.toString()}
 					/>
 				</div>
-
+				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
 					<ResultTable

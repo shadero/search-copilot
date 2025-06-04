@@ -23,7 +23,9 @@ export default function Template({ body }: { body: React.ReactNode }) {
 					</div>
 					<div className="mx-2 flex-1 px-2">SEO</div>
 				</div>
-				{body}
+				<div className="p-4">
+					{body}
+				</div>
 			</div>
 			<div className="drawer-side z-40 lg:drawer-open">
 				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
