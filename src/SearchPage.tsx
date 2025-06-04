@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FetchSearchNotes, { SEARCH_SORTS, type SearchSort } from './note-api/searches';
 import SearchBar from "./components/SearchBar";
-import ResultTable from "./components/ResultTable";
+import ResultTable, { ResultTd } from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import OptionSelectBox from "./components/OptionSelectBox";
 
@@ -12,10 +12,12 @@ type SearchResult = {
 
 function SearchResultRow({ name, url }: SearchResult) {
 	return (
-		<tr>
-			<td>{name}</td>
-			<td><a href={url}>{url}</a></td>
-		</tr>
+		<>
+			<ResultTd>{name}</ResultTd>
+			<ResultTd className="text-blue-600 dark:text-blue-500 font-medium px-6 py-3">
+				<a href={url}>Link</a>
+			</ResultTd>
+		</>
 	);
 }
 
@@ -86,14 +88,16 @@ export default function SearchPage() {
 				defaultValue={queryParam.sort}
 			/>
 			<p>検索結果: {results.length}件</p>
-			<ResultTable
-				headers={["Name", "URL"]}
-				rows={
-					results.map((result, index) => (
-						<SearchResultRow key={index} name={result.name} url={result.url} />
-					))
-				}
-			/>
+			<div className="max-w-3xl">
+				<ResultTable
+					headers={["Name", "URL"]}
+					rows={
+						results.map((result) => (
+							<SearchResultRow name={result.name} url={result.url} />
+						))
+					}
+				/>
+			</div>
 		</>
 	);
 }

@@ -1,4 +1,4 @@
-import ResultTable from "./components/ResultTable";
+import ResultTable, { ResultTd } from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
 import { parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
@@ -12,9 +12,9 @@ type SuggestKeywordResult = {
 
 function SuggestResultRow({ name }: SuggestKeywordResult) {
 	return (
-		<tr>
-			<td>{name}</td>
-		</tr>
+		<>
+			<ResultTd>{name}</ResultTd>
+		</>
 	);
 }
 
@@ -82,14 +82,16 @@ export default function SuggestKeywordsPage() {
 				defaultValue={queryParams.related.toString()}
 			/>
 			<p>検索結果: {results.length}件</p>
-			<ResultTable
-				headers={["Keywords"]}
-				rows={
-					results.map(
-						(result, index) => (<SuggestResultRow key={index} name={result.name} />)
-					)
-				}
-			/>
+			<div className="max-w-xl">
+				<ResultTable
+					headers={["Keywords"]}
+					rows={
+						results.map(
+							(result) => (<SuggestResultRow name={result.name} />)
+						)
+					}
+				/>
+			</div>
 		</>
 	);
 }
