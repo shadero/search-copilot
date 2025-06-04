@@ -14,8 +14,8 @@ function SearchResultRow({ name, url }: SearchResult) {
 	return (
 		<>
 			<ResultTd>{name}</ResultTd>
-			<ResultTd className="text-blue-600 dark:text-blue-500 font-medium px-6 py-3">
-				<a href={url}>Link</a>
+			<ResultTd>
+				<a className="link link-primary" href={url}>Link</a>
 			</ResultTd>
 		</>
 	);
@@ -68,6 +68,7 @@ export default function SearchPage() {
 		<>
 			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
 			<OptionSelectBox
+				name="表示件数"
 				map={{
 					10: "10件",
 					15: "15件",
@@ -79,6 +80,7 @@ export default function SearchPage() {
 				defaultValue={queryParam.size.toString()}
 			/>
 			<OptionSelectBox
+				name="ソート"
 				map={{
 					[SEARCH_SORTS[0]]: "人気順",
 					[SEARCH_SORTS[1]]: "ホット順",

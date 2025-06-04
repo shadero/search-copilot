@@ -63,6 +63,7 @@ export default function SuggestKeywordsPage() {
 		<>
 			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
 			<OptionSelectBox
+				name="表示件数"
 				map={{
 					10: "10件",
 					15: "15件",
@@ -74,6 +75,7 @@ export default function SuggestKeywordsPage() {
 				defaultValue={queryParams.size.toString()}
 			/>
 			<OptionSelectBox
+				name="キーワードの種類"
 				map={{
 					false: "サジェストキーワード",
 					true: "関連キーワード",
