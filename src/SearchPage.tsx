@@ -53,11 +53,6 @@ function SearchPage() {
 		fetchResults(queryParam.query, queryParam.sort!, queryParam.size);
 	}, [queryParam]);
 
-	const headers = ["Name", "URL"];
-	const rows = results.map((result, index) => (
-		<SearchResultRow key={index} name={result.name} url={result.url} />
-	));
-
 	return (
 		<>
 			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
@@ -82,8 +77,14 @@ function SearchPage() {
 				defaultValue={queryParam.sort}
 			/>
 			<p>検索結果: {results.length}件</p>
-
-			<ResultTable headers={headers} rows={rows} />
+			<ResultTable
+				headers={["Name", "URL"]}
+				rows={
+					results.map((result, index) => (
+						<SearchResultRow key={index} name={result.name} url={result.url} />
+					))
+				}
+			/>
 		</>
 	);
 }
