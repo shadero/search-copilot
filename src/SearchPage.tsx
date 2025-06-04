@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FetchSearchNotes, { SEARCH_SORTS, type SearchSort } from './note-api/searches';
 import SearchBar from "./components/SearchBar";
-import ResultTable, { ResultTd } from "./components/ResultTable";
+import ResultTable from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import OptionSelectBox from "./components/OptionSelectBox";
 
@@ -13,10 +13,10 @@ type SearchResult = {
 function SearchResultRow({ name, url }: SearchResult) {
 	return (
 		<>
-			<ResultTd>{name}</ResultTd>
-			<ResultTd>
+			<td>{name}</td>
+			<td>
 				<a className="link link-primary" href={url}>Link</a>
-			</ResultTd>
+			</td>
 		</>
 	);
 }

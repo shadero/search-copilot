@@ -1,4 +1,4 @@
-import ResultTable, { ResultTd } from "./components/ResultTable";
+import ResultTable from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
 import { parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
@@ -13,7 +13,7 @@ type SuggestKeywordResult = {
 function SuggestResultRow({ name }: SuggestKeywordResult) {
 	return (
 		<>
-			<ResultTd>{name}</ResultTd>
+			<td>{name}</td>
 		</>
 	);
 }
