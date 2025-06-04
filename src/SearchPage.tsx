@@ -22,6 +22,38 @@ function SearchResultRow({ name, url }: SearchResult) {
 	);
 }
 
+function SearchOptions({ queryParam, setQueryParam }: {
+	queryParam: { query: string, sort: SearchSort, size: number },
+	setQueryParam: (params: Partial<{ query: string, sort: SearchSort, size: number }>) => void
+}) {
+	return (
+		<div className="flex gap-4 items-end mt-4">
+			<OptionSelectBox
+				name="表示件数"
+				map={{
+					10: "10件",
+					15: "15件",
+					20: "20件",
+					25: "25件",
+					50: "50件",
+				}}
+				onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
+				defaultValue={queryParam.size.toString()}
+			/>
+			<OptionSelectBox
+				name="ソート"
+				map={{
+					[SEARCH_SORTS[0]]: "人気順",
+					[SEARCH_SORTS[1]]: "ホット順",
+					[SEARCH_SORTS[2]]: "新着順",
+				}}
+				onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
+				defaultValue={queryParam.sort}
+			/>
+		</div>
+	);
+}
+
 export default function SearchPage() {
 	const baseUrl = 'http://localhost:8080/https://note.com';
 	const [queryParam, setQueryParam] = useQueryStates(
@@ -66,30 +98,7 @@ export default function SearchPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParam.query} onSearch={handleSubmit} />
-				<div className="flex gap-4 items-end mt-4">
-					<OptionSelectBox
-						name="表示件数"
-						map={{
-							10: "10件",
-							15: "15件",
-							20: "20件",
-							25: "25件",
-							50: "50件",
-						}}
-						onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
-						defaultValue={queryParam.size.toString()}
-					/>
-					<OptionSelectBox
-						name="ソート"
-						map={{
-							[SEARCH_SORTS[0]]: "人気順",
-							[SEARCH_SORTS[1]]: "ホット順",
-							[SEARCH_SORTS[2]]: "新着順",
-						}}
-						onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
-						defaultValue={queryParam.sort}
-					/>
-				</div>
+				<SearchOptions queryParam={queryParam} setQueryParam={setQueryParam} />
 				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-3xl">

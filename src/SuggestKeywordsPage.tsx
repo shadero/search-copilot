@@ -19,6 +19,37 @@ function SuggestResultRow({ name }: SuggestKeywordResult) {
 	);
 }
 
+function Options({ queryParams, setQueryParams }: {
+	queryParams: { query: string, size: number, related: boolean },
+	setQueryParams: (params: Partial<{ query: string, size: number, related: boolean }>) => void
+}) {
+	return (
+		<div className="flex gap-4 items-end mt-4">
+			<OptionSelectBox
+				name="表示件数"
+				map={{
+					10: "10件",
+					15: "15件",
+					20: "20件",
+					25: "25件",
+					50: "50件",
+				}}
+				onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
+				defaultValue={queryParams.size.toString()}
+			/>
+			<OptionSelectBox
+				name="キーワードの種類"
+				map={{
+					false: "サジェストキーワード",
+					true: "関連キーワード",
+				}}
+				onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
+				defaultValue={queryParams.related.toString()}
+			/>
+		</div>
+	);
+}
+
 export default function SuggestKeywordsPage() {
 	const baseUrl = 'http://localhost:8080/https://note.com';
 	const [queryParams, setQueryParams] = useQueryStates(
@@ -61,29 +92,7 @@ export default function SuggestKeywordsPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
-				<div className="flex gap-4 items-end mt-4">
-					<OptionSelectBox
-						name="表示件数"
-						map={{
-							10: "10件",
-							15: "15件",
-							20: "20件",
-							25: "25件",
-							50: "50件",
-						}}
-						onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
-						defaultValue={queryParams.size.toString()}
-					/>
-					<OptionSelectBox
-						name="キーワードの種類"
-						map={{
-							false: "サジェストキーワード",
-							true: "関連キーワード",
-						}}
-						onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
-						defaultValue={queryParams.related.toString()}
-					/>
-				</div>
+				<Options queryParams={queryParams} setQueryParams={setQueryParams} />
 				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
