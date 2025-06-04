@@ -61,27 +61,30 @@ export default function SuggestKeywordsPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
-				<OptionSelectBox
-					name="表示件数"
-					map={{
-						10: "10件",
-						15: "15件",
-						20: "20件",
-						25: "25件",
-						50: "50件",
-					}}
-					onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
-					defaultValue={queryParams.size.toString()}
-				/>
-				<OptionSelectBox
-					name="キーワードの種類"
-					map={{
-						false: "サジェストキーワード",
-						true: "関連キーワード",
-					}}
-					onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
-					defaultValue={queryParams.related.toString()}
-				/>
+				<div className="flex gap-4 items-end mb-4">
+					<OptionSelectBox
+						name="表示件数"
+						map={{
+							10: "10件",
+							15: "15件",
+							20: "20件",
+							25: "25件",
+							50: "50件",
+						}}
+						onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
+						defaultValue={queryParams.size.toString()}
+					/>
+					<OptionSelectBox
+						name="キーワードの種類"
+						map={{
+							false: "サジェストキーワード",
+							true: "関連キーワード",
+						}}
+						onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
+						defaultValue={queryParams.related.toString()}
+					/>
+				</div>
+
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
 					<ResultTable
