@@ -30,17 +30,25 @@ export default function SearchPage() {
 	const [inputQuery, setInputQuery] = useState<string>("");
 	const [results, setResults] = useState<SearchResult[]>([]);
 
-	function fetchResults(query: string, sort: SearchSort = "popular", size: number = 10) {
-		FetchSearchNotes(query, sort, size).then(data => {
-			console.log(`Fetching search results for query: ${query}`);
-			const result = data.contents.map(note => {
-				return { name: note.name, url: `https://note.com/${note.user.urlname}/n/${note.key}` } as SearchResult;
+	async function fetchResults(
+		query: string,
+		sort: SearchSort = "popular",
+		size: number = 10
+	): Promise<SearchResult[]> {
+		console.log(`Fetching search results for query: ${query}`);
+		const result = FetchSearchNotes(query, sort, size)
+			.then(data => {
+				return data.contents.map(
+					note => {
+						const url = `https://note.com/${note.user.urlname}/n/${note.key}`
+						return { name: note.name, url: url } as SearchResult;
+					}
+				);
+			}).catch(error => {
+				console.error("Error fetching search results:", error);
+				return [];
 			});
-			setResults(result);
-		}).catch(error => {
-			console.error("Error fetching search results:", error);
-			setResults([]);
-		});
+		return result;
 	}
 
 	const handleSubmit = (event: React.FormEvent) => {
@@ -50,7 +58,7 @@ export default function SearchPage() {
 
 	useEffect(() => {
 		setInputQuery(queryParam.query);
-		fetchResults(queryParam.query, queryParam.sort!, queryParam.size);
+		fetchResults(queryParam.query, queryParam.sort!, queryParam.size).then(setResults);
 	}, [queryParam]);
 
 	return (

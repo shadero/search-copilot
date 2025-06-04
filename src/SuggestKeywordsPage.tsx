@@ -29,7 +29,7 @@ export default function SuggestKeywordsPage() {
 
 	async function fetchResults(query: string, size: number = 10): Promise<SuggestKeywordResult[]> {
 		console.log(`Fetching search results for query: ${query}`);
-		const hoge = await FetchHashtags(query, size)
+		const result = await FetchHashtags(query, size)
 			.then(data => {
 				return data.contents.map(
 					content => { return { name: content.name }; }
@@ -39,7 +39,7 @@ export default function SuggestKeywordsPage() {
 				console.error("Error fetching search results:", error);
 				return [];
 			});
-		return hoge;
+		return result;
 	}
 
 	const handleSubmit = (event: React.FormEvent) => {
