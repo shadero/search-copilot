@@ -4,6 +4,7 @@ import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import OptionSelectBox from "./components/OptionSelectBox";
+import Template from "./components/Template";
 
 type SearchResult = {
 	name: string,
@@ -64,42 +65,48 @@ export default function SearchPage() {
 		fetchResults(queryParam.query, queryParam.sort!, queryParam.size).then(setResults);
 	}, [queryParam]);
 
-	return (
-		<>
-			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
-			<OptionSelectBox
-				name="表示件数"
-				map={{
-					10: "10件",
-					15: "15件",
-					20: "20件",
-					25: "25件",
-					50: "50件",
-				}}
-				onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
-				defaultValue={queryParam.size.toString()}
-			/>
-			<OptionSelectBox
-				name="ソート"
-				map={{
-					[SEARCH_SORTS[0]]: "人気順",
-					[SEARCH_SORTS[1]]: "ホット順",
-					[SEARCH_SORTS[2]]: "新着順",
-				}}
-				onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
-				defaultValue={queryParam.sort}
-			/>
-			<p>検索結果: {results.length}件</p>
-			<div className="max-w-3xl">
-				<ResultTable
-					headers={["Name", "URL"]}
-					rows={
-						results.map((result) => (
-							<SearchResultRow name={result.name} url={result.url} />
-						))
-					}
+	function MainContent() {
+		return (
+			<>
+				<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
+				<OptionSelectBox
+					name="表示件数"
+					map={{
+						10: "10件",
+						15: "15件",
+						20: "20件",
+						25: "25件",
+						50: "50件",
+					}}
+					onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
+					defaultValue={queryParam.size.toString()}
 				/>
-			</div>
-		</>
+				<OptionSelectBox
+					name="ソート"
+					map={{
+						[SEARCH_SORTS[0]]: "人気順",
+						[SEARCH_SORTS[1]]: "ホット順",
+						[SEARCH_SORTS[2]]: "新着順",
+					}}
+					onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
+					defaultValue={queryParam.sort}
+				/>
+				<p>検索結果: {results.length}件</p>
+				<div className="max-w-3xl">
+					<ResultTable
+						headers={["Name", "URL"]}
+						rows={
+							results.map((result) => (
+								<SearchResultRow key={result.url} name={result.name} url={result.url} />
+							))
+						}
+					/>
+				</div>
+			</>
+		);
+	}
+
+	return (
+		<Template body={<MainContent />} />
 	);
 }
