@@ -3,6 +3,7 @@ import FetchSearchNotes, { SEARCH_SORTS, type SearchSort } from './note-api/sear
 import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import OptionSelectBox from "./components/OptionSelectBox";
 
 type SearchResult = {
 	name: string,
@@ -56,9 +57,32 @@ function SearchPage() {
 	const rows = results.map((result, index) => (
 		<SearchResultRow key={index} name={result.name} url={result.url} />
 	));
+
 	return (
 		<>
 			<SearchBar initialQuery={inputQuery} setQuery={setInputQuery} onSubmit={handleSubmit} />
+			<OptionSelectBox
+				map={{
+					10: "10件",
+					15: "15件",
+					20: "20件",
+					25: "25件",
+					50: "50件",
+				}}
+				onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
+				defaultValue={queryParam.size.toString()}
+			/>
+			<OptionSelectBox
+				map={{
+					[SEARCH_SORTS[0]]: "人気順",
+					[SEARCH_SORTS[1]]: "ホット順",
+					[SEARCH_SORTS[2]]: "新着順",
+				}}
+				onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
+				defaultValue={queryParam.sort}
+			/>
+			<p>検索結果: {results.length}件</p>
+
 			<ResultTable headers={headers} rows={rows} />
 		</>
 	);
