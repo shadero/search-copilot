@@ -28,7 +28,7 @@ function Options({ queryParams, setQueryParams }: {
 	setQueryParams: (params: Partial<{ query: string, size: number, related: boolean }>) => void
 }) {
 	return (
-		<div className="flex gap-4 items-end mt-4">
+		<div className="flex gap-4 items-end">
 			<OptionSelectBox
 				name="表示件数"
 				map={{
