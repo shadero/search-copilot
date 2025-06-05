@@ -1,10 +1,6 @@
 import axios from "axios";
 import { XMLParser } from "fast-xml-parser";
 
-type Suggestion = {
-	data: string;
-};
-
 const parser = new XMLParser({
 	ignoreDeclaration: true,
 	ignoreAttributes: false, // attributeが自動で削除される設定になっているのでオフに
