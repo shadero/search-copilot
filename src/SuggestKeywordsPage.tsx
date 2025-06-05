@@ -70,7 +70,7 @@ export default function SuggestKeywordsPage() {
 			content => {
 				const serialize = createSerializer(SearchPageQueryModel);
 				const url = serialize("/search", {
-					query: content.name.slice(1), // Remove the leading '#'
+					query: content.name,
 					size: queryParams.size,
 				});
 				return { name: content.name, url: url }
@@ -82,7 +82,7 @@ export default function SuggestKeywordsPage() {
 		return data.map(content => {
 			const serialize = createSerializer(SearchPageQueryModel);
 			const url = serialize("/search", {
-				query: content.name.slice(1), // Remove the leading '#'
+				query: content.name,
 				size: queryParams.size,
 			});
 			return { name: content.name, url: url };
