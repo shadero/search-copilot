@@ -41,10 +41,10 @@ function Options({ queryParams, setQueryParams }: {
 				defaultValue={queryParams.size.toString()}
 			/>
 			<OptionSelectBox
-				name="キーワードの種類"
+				name="ハッシュタグの種類"
 				map={{
-					false: "サジェストキーワード",
-					true: "関連キーワード",
+					false: "サジェストハッシュタグ",
+					true: "関連ハッシュタグ",
 				}}
 				onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
 				defaultValue={queryParams.related.toString()}
