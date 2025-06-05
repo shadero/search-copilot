@@ -24,37 +24,6 @@ function SuggestResultRow({ name, url }: SuggestKeywordResult) {
 	);
 }
 
-function Options({ queryParams, setQueryParams }: {
-	queryParams: { query: string, size: number, related: boolean },
-	setQueryParams: (params: Partial<{ query: string, size: number, related: boolean }>) => void
-}) {
-	return (
-		<div className="flex gap-4 items-end">
-			<OptionSelectBox
-				name="表示件数"
-				map={{
-					10: "10件",
-					15: "15件",
-					20: "20件",
-					25: "25件",
-					50: "50件",
-				}}
-				onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
-				defaultValue={queryParams.size.toString()}
-			/>
-			<OptionSelectBox
-				name="ハッシュタグの種類"
-				map={{
-					false: "サジェストハッシュタグ",
-					true: "関連ハッシュタグ",
-				}}
-				onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
-				defaultValue={queryParams.related.toString()}
-			/>
-		</div>
-	);
-}
-
 export default function SuggestKeywordsPage() {
 	const noteBaseUrl = 'http://localhost:8080/https://note.com';
 	const googleBaseUrl = 'http://localhost:8080/https://www.google.co.jp';
@@ -78,6 +47,36 @@ export default function SuggestKeywordsPage() {
 			});
 			return { name: keyword, url: url };
 		});
+	}
+
+	function Options() {
+		return (
+			<div className="flex gap-4 items-end">
+				<OptionSelectBox
+					name="表示件数"
+					map={{
+						10: "10件",
+						15: "15件",
+						20: "20件",
+						25: "25件",
+						50: "50件",
+					}}
+					onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
+					defaultValue={queryParams.size.toString()}
+				/>
+
+				{/* Note Only */}
+				{queryParams.service == "Note" && <OptionSelectBox
+					name="ハッシュタグの種類"
+					map={{
+						false: "サジェストハッシュタグ",
+						true: "関連ハッシュタグ",
+					}}
+					onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
+					defaultValue={queryParams.related.toString()}
+				/>}
+			</div>
+		);
 	}
 
 	const handleSearch = (query: string) => {
@@ -113,7 +112,7 @@ export default function SuggestKeywordsPage() {
 			<>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
 				<ServiceSwitch displayServices={Services} service={queryParams.service} setService={(s) => setQueryParams({ service: s })} />
-				<Options queryParams={queryParams} setQueryParams={setQueryParams} />
+				<Options />
 				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
