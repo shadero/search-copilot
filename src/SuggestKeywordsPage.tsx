@@ -1,12 +1,13 @@
 import ResultTable from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
-import { createSerializer, parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { createSerializer, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { FetchHashtags, type HashtagData } from "./note-api/searches";
 import OptionSelectBox from "./components/OptionSelectBox";
 import { FetchRelatedHashtags, type RelatedHashtag } from "./note-api/hashtags";
 import Template from "./components/Template";
 import { SearchPageQueryModel } from "./SearchPage";
+import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -57,6 +58,7 @@ export default function SuggestKeywordsPage() {
 	const baseUrl = 'http://localhost:8080/https://note.com';
 	const [queryParams, setQueryParams] = useQueryStates(
 		{
+			service: parseAsStringLiteral(Services).withDefault("Note"),
 			query: parseAsString.withDefault(""),
 			size: parseAsInteger.withDefault(10),
 			related: parseAsBoolean.withDefault(false),
@@ -111,6 +113,7 @@ export default function SuggestKeywordsPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
+				<ServiceSwitch displayServices={Services} service={queryParams.service} setService={(s) => setQueryParams({ service: s })} />
 				<Options queryParams={queryParams} setQueryParams={setQueryParams} />
 				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>

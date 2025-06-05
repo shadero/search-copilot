@@ -6,6 +6,7 @@ import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } f
 import OptionSelectBox from "./components/OptionSelectBox";
 import Template from "./components/Template";
 import FetchNotesByHashtag from "./note-api/searchNotesByHashtag";
+import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 
 type SearchResult = {
 	name: string,
@@ -28,7 +29,7 @@ function SearchOptions({ queryParam, setQueryParam }: {
 	setQueryParam: (params: Partial<{ query: string, sort: SearchSort, size: number }>) => void
 }) {
 	return (
-		<div className="flex gap-4 items-end mt-4">
+		<div className="flex gap-4 items-end">
 			<OptionSelectBox
 				name="表示件数"
 				map={{
@@ -56,6 +57,7 @@ function SearchOptions({ queryParam, setQueryParam }: {
 }
 
 export const SearchPageQueryModel = {
+	service: parseAsStringLiteral(Services).withDefault("Note"),
 	query: parseAsString.withDefault(""),
 	sort: parseAsStringLiteral(SEARCH_SORTS).withDefault("popular"),
 	size: parseAsInteger.withDefault(10),
@@ -119,6 +121,7 @@ export default function SearchPage() {
 		return (
 			<>
 				<SearchBar initialQuery={queryParam.query} onSearch={handleSubmit} />
+				<ServiceSwitch displayServices={Services} service={queryParam.service} setService={(s) => setQueryParam({ service: s })} />
 				<SearchOptions queryParam={queryParam} setQueryParam={setQueryParam} />
 				<div className="divider"></div>
 				<p>検索結果: {results.length}件</p>
