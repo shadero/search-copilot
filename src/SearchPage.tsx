@@ -55,15 +55,15 @@ function SearchOptions({ queryParam, setQueryParam }: {
 	);
 }
 
+export const SearchPageQueryModel = {
+	query: parseAsString.withDefault(""),
+	sort: parseAsStringLiteral(SEARCH_SORTS).withDefault("popular"),
+	size: parseAsInteger.withDefault(10),
+};
+
 export default function SearchPage() {
 	const baseUrl = 'http://localhost:8080/https://note.com';
-	const [queryParam, setQueryParam] = useQueryStates(
-		{
-			query: parseAsString.withDefault(""),
-			sort: parseAsStringLiteral(SEARCH_SORTS).withDefault("popular"),
-			size: parseAsInteger.withDefault(10),
-		},
-		{ history: "push" });
+	const [queryParam, setQueryParam] = useQueryStates(SearchPageQueryModel, { history: "push" });
 	const [results, setResults] = useState<SearchResult[]>([]);
 
 	async function fetchResults(

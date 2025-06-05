@@ -1,20 +1,23 @@
 import ResultTable from "./components/ResultTable";
 import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from "react";
-import { parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { createSerializer, parseAsBoolean, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { FetchHashtags, type HashtagData } from "./note-api/searches";
 import OptionSelectBox from "./components/OptionSelectBox";
 import { FetchRelatedHashtags, type RelatedHashtag } from "./note-api/hashtags";
 import Template from "./components/Template";
+import { SearchPageQueryModel } from "./SearchPage";
 
 type SuggestKeywordResult = {
 	name: string,
+	url: string
 };
 
-function SuggestResultRow({ name }: SuggestKeywordResult) {
+function SuggestResultRow({ name, url }: SuggestKeywordResult) {
 	return (
 		<>
 			<td>{name}</td>
+			<td><a href={url}>🔎</a></td>
 		</>
 	);
 }
@@ -63,11 +66,27 @@ export default function SuggestKeywordsPage() {
 	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
 	function hashtagData2Result(data: HashtagData): SuggestKeywordResult[] {
-		return data.contents.map(content => ({ name: content.name }));
+		return data.contents.map(
+			content => {
+				const serialize = createSerializer(SearchPageQueryModel);
+				const url = serialize("/search", {
+					query: content.name.slice(1), // Remove the leading '#'
+					size: queryParams.size,
+				});
+				return { name: content.name, url: url }
+			}
+		);
 	}
 
 	function relatedHashtag2Result(data: RelatedHashtag[]): SuggestKeywordResult[] {
-		return data.map(content => ({ name: content.name }));
+		return data.map(content => {
+			const serialize = createSerializer(SearchPageQueryModel);
+			const url = serialize("/search", {
+				query: content.name.slice(1), // Remove the leading '#'
+				size: queryParams.size,
+			});
+			return { name: content.name, url: url };
+		});
 	}
 
 	const handleSearch = (query: string) => {
@@ -97,10 +116,10 @@ export default function SuggestKeywordsPage() {
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
 					<ResultTable
-						headers={["Keywords"]}
+						headers={["Keyword", "検索"]}
 						rows={
 							results.map(
-								(result) => (<SuggestResultRow name={result.name} />)
+								(result) => (<SuggestResultRow name={result.name} url={result.url} />)
 							)
 						}
 					/>
