@@ -8,6 +8,7 @@ import { FetchRelatedHashtags, type RelatedHashtag } from "./note-api/hashtags";
 import Template from "./components/Template";
 import { SearchPageQueryModel } from "./SearchPage";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
+import { fetchSuggestions } from "./google-api/suggest";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -55,7 +56,8 @@ function Options({ queryParams, setQueryParams }: {
 }
 
 export default function SuggestKeywordsPage() {
-	const baseUrl = 'http://localhost:8080/https://note.com';
+	const noteBaseUrl = 'http://localhost:8080/https://note.com';
+	const googleBaseUrl = 'http://localhost:8080/https://www.google.co.jp';
 	const [queryParams, setQueryParams] = useQueryStates(
 		{
 			service: parseAsStringLiteral(Services).withDefault("Note"),
@@ -67,27 +69,14 @@ export default function SuggestKeywordsPage() {
 	);
 	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
-	function hashtagData2Result(data: HashtagData): SuggestKeywordResult[] {
-		return data.contents.map(
-			content => {
-				const serialize = createSerializer(SearchPageQueryModel);
-				const url = serialize("/search", {
-					query: content.name,
-					size: queryParams.size,
-				});
-				return { name: content.name, url: url }
-			}
-		);
-	}
-
-	function relatedHashtag2Result(data: RelatedHashtag[]): SuggestKeywordResult[] {
-		return data.map(content => {
+	function CalcResult(keywords: string[]): SuggestKeywordResult[] {
+		return keywords.map(keyword => {
 			const serialize = createSerializer(SearchPageQueryModel);
 			const url = serialize("/search", {
-				query: content.name,
+				query: keyword,
 				size: queryParams.size,
 			});
-			return { name: content.name, url: url };
+			return { name: keyword, url: url };
 		});
 	}
 
@@ -96,14 +85,24 @@ export default function SuggestKeywordsPage() {
 	};
 
 	useEffect(() => {
+		if (queryParams.service == "Google") {
+			fetchSuggestions(googleBaseUrl, queryParams.query)
+				.then(CalcResult)
+				.then(setResults)
+				.catch(() => { setResults([]); });
+			return;
+		}
+
 		if (queryParams.related) {
-			FetchRelatedHashtags(baseUrl, queryParams.query)
-				.then(relatedHashtag2Result)
+			FetchRelatedHashtags(noteBaseUrl, queryParams.query)
+				.then((data) => (data.map(c => c.name)))
+				.then(CalcResult)
 				.then(setResults)
 				.catch(() => { setResults([]); });
 		} else {
-			FetchHashtags(baseUrl, queryParams.query, queryParams.size)
-				.then(hashtagData2Result)
+			FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size)
+				.then((data) => data.contents.map(c => c.name))
+				.then(CalcResult)
 				.then(setResults)
 				.catch(() => { setResults([]); });
 		}
