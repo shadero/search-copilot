@@ -64,7 +64,7 @@ export const SearchPageQueryModel = {
 };
 
 export default function SearchPage() {
-	const baseUrl = 'http://localhost:8080/https://note.com';
+	const baseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
 	const [queryParam, setQueryParam] = useQueryStates(SearchPageQueryModel, { history: "push" });
 	const [results, setResults] = useState<SearchResult[]>([]);
 

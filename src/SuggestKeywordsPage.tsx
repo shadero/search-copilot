@@ -25,8 +25,8 @@ function SuggestResultRow({ name, url }: SuggestKeywordResult) {
 }
 
 export default function SuggestKeywordsPage() {
-	const noteBaseUrl = 'http://localhost:8080/https://note.com';
-	const googleBaseUrl = 'http://localhost:8080/https://www.google.co.jp';
+	const noteBaseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
+	const googleBaseUrl = import.meta.env.VITE_GOOGLE_BASE_URL as string;
 	const [queryParams, setQueryParams] = useQueryStates(
 		{
 			service: parseAsStringLiteral(Services).withDefault("Note"),
