@@ -17,7 +17,7 @@ function SuggestResultRow({ name, url }: SuggestKeywordResult) {
 	return (
 		<>
 			<td>{name}</td>
-			<td><a href={url}>🔎</a></td>
+			<td><a className="btn btn-sm" href={url}>🔎</a></td>
 		</>
 	);
 }
