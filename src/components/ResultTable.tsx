@@ -1,4 +1,9 @@
-function ResultTable({ headers: headerNames, rows }: { headers: string[], rows: React.ReactNode[] }) {
+type ResultTableProps = {
+	headers: string[];
+	rows: React.ReactNode[];
+};
+
+function ResultTable({ headers: headerNames, rows }: ResultTableProps) {
 	const headers = headerNames.map((header, index) => (
 		<th key={index}>{header}</th>
 	));
