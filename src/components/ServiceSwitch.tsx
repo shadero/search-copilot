@@ -11,27 +11,19 @@ export default function ServiceSwitch({
 	setService: (service: Service) => void;
 }) {
 	return (
-		<div className="btn-group flex gap-2 flex-wrap">
-			{displayServices.includes("Note") && (
+		<div className="btn-group flex gap-2 flex-wrap">{
+			displayServices.map((svc) => (
 				<input
+					key={svc}
 					type="radio"
-					aria-label="Note"
+					aria-label={svc}
 					className="btn"
 					name="service"
-					checked={service === "Note"}
-					onChange={() => setService("Note")}
+					checked={service === svc}
+					onChange={() => setService(svc)}
 				/>
-			)}
-			{displayServices.includes("Google") && (
-				<input
-					type="radio"
-					aria-label="Google"
-					className="btn"
-					name="service"
-					checked={service === "Google"}
-					onChange={() => setService("Google")}
-				/>
-			)}
+			))
+		}
 		</div>
 	);
 }
