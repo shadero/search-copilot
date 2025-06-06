@@ -11,7 +11,7 @@ export default function ServiceSwitch({
 	setService: (service: Service) => void;
 }) {
 	return (
-		<div className="btn-group">
+		<div className="btn-group flex gap-2 flex-wrap">
 			{displayServices.includes("Note") && (
 				<input
 					type="radio"
