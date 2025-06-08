@@ -102,13 +102,10 @@ export default function SearchPage() {
 		// ハッシュタグ検索
 		if (query.startsWith("#")) {
 			const hashtag = query.slice(1);
-			const result = FetchNotesByHashtag(noteApiBaseUrl, hashtag, sort)
-				.then(data => {
-					return data.data.notes.map(
-						note => {
-							const url = `https://note.com/${note.user.urlname}/n/${note.key}`;
-							return { name: note.name, url: url } as SearchResult;
-						}
+			const result = FetchNotesByHashtag(noteApiBaseUrl, hashtag, sort, size)
+				.then(notes => {
+					return notes.map(
+						note => { return { name: note.name, url: GetNoteUrl(note) } as SearchResult; }
 					);
 				}).catch(error => {
 					console.error("Error fetching hashtag search results:", error);

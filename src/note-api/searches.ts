@@ -21,7 +21,7 @@ type NotesData = {
 	rounded_total_count: number;
 };
 
-type Note = {
+export type Note = {
 	id: number;
 	type: string;
 	status: string;
