@@ -9,7 +9,6 @@ import Template from "./components/Template";
 import { SearchPageQueryModel } from "./SearchPage";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 import { fetchSuggestions } from "./google-api/suggest";
-import { set } from "zod/v4";
 
 type SuggestKeywordResult = {
 	name: string,
