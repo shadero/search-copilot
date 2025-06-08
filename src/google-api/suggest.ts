@@ -21,7 +21,7 @@ export async function fetchSuggestions(
 				return parser.parse(data);
 			}],
 		});
-		
+
 		return ax.get(url).then(response => {
 			return response.data.toplevel.CompleteSuggestion.map(
 				(item: any) => {
