@@ -7,6 +7,7 @@ import OptionSelectBox from "./components/OptionSelectBox";
 import Template from "./components/Template";
 import FetchNotesByHashtag from "./note-api/searchNotesByHashtag";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
+import { FetchSearchResults } from "./google-scrape-api/scrape";
 
 type SearchResult = {
 	name: string,
@@ -25,8 +26,8 @@ function SearchResultRow({ name, url }: SearchResult) {
 }
 
 function SearchOptions({ queryParam, setQueryParam }: {
-	queryParam: { query: string, sort: SearchSort, size: number },
-	setQueryParam: (params: Partial<{ query: string, sort: SearchSort, size: number }>) => void
+	queryParam: SearchPageQuery,
+	setQueryParam: (params: Partial<SearchPageQuery>) => void
 }) {
 	return (
 		<div className="flex gap-4 items-end">
@@ -42,7 +43,7 @@ function SearchOptions({ queryParam, setQueryParam }: {
 				onChange={(e) => { setQueryParam({ size: parseInt(e.target.value) }); }}
 				defaultValue={queryParam.size.toString()}
 			/>
-			<OptionSelectBox
+			{queryParam.service == "Note" && <OptionSelectBox
 				name="ソート"
 				map={{
 					[SEARCH_SORTS[0]]: "人気順",
@@ -51,10 +52,17 @@ function SearchOptions({ queryParam, setQueryParam }: {
 				}}
 				onChange={(e) => { setQueryParam({ sort: e.target.value as SearchSort }); }}
 				defaultValue={queryParam.sort}
-			/>
+			/>}
 		</div>
 	);
 }
+
+export type SearchPageQuery = {
+	service: typeof Services[number];
+	query: string;
+	sort: SearchSort;
+	size: number;
+};
 
 export const SearchPageQueryModel = {
 	service: parseAsStringLiteral(Services).withDefault("Note"),
@@ -64,7 +72,8 @@ export const SearchPageQueryModel = {
 };
 
 export default function SearchPage() {
-	const baseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
+	const googleScrapeApiUrl = import.meta.env.VITE_GOOGLE_SCRAPE_API_URL as string;
+	const noteApiBaseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
 	const [queryParam, setQueryParam] = useQueryStates(SearchPageQueryModel, { history: "push" });
 	const [results, setResults] = useState<SearchResult[]>([]);
 
@@ -75,10 +84,25 @@ export default function SearchPage() {
 	): Promise<SearchResult[]> {
 		console.log(`Fetching search results for query: ${query}`);
 
+		if (queryParam.service == "Google") {
+			const result = FetchSearchResults(googleScrapeApiUrl, query, size)
+				.then(data => {
+					return data.map(
+						item => {
+							return { name: item.title, url: item.url } as SearchResult;
+						}
+					);
+				}).catch(error => {
+					console.error("Error fetching Google search results:", error);
+					return [];
+				});
+			return result;
+		}
+
 		// ハッシュタグ検索
 		if (query.startsWith("#")) {
 			const hashtag = query.slice(1);
-			const result = FetchNotesByHashtag(baseUrl, hashtag, sort)
+			const result = FetchNotesByHashtag(noteApiBaseUrl, hashtag, sort)
 				.then(data => {
 					return data.data.notes.map(
 						note => {
@@ -94,7 +118,7 @@ export default function SearchPage() {
 		}
 
 		// 通常のキーワード検索
-		const result = FetchSearchNotes(baseUrl, query, sort, size)
+		const result = FetchSearchNotes(noteApiBaseUrl, query, sort, size)
 			.then(data => {
 				return data.contents.map(
 					note => {
