@@ -132,6 +132,7 @@ export default function SearchPage() {
 	};
 
 	useEffect(() => {
+		results.length = 0;
 		fetchResults(queryParam.query, queryParam.sort!, queryParam.size).then(setResults);
 	}, [queryParam]);
 

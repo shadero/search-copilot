@@ -94,6 +94,8 @@ export default function SuggestKeywordsPage() {
 				setQueryParams({ query: queryParams.query.slice(1) });
 				return;
 			}
+			results.length = 0;
+			
 			try {
 				let keywords: string[] = [];
 				if (queryParams.service === "Google") {
