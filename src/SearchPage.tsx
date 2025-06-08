@@ -19,7 +19,7 @@ function SearchResultRow({ name, url }: SearchResult) {
 		<>
 			<td>{name}</td>
 			<td>
-				<a className="link link-primary" href={url}>Link</a>
+				<a className="link link-primary" href={url} target="_blank" rel="noreferrer">Link</a>
 			</td>
 		</>
 	);
