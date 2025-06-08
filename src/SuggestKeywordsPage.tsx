@@ -12,13 +12,15 @@ import { fetchSuggestions } from "./google-api/suggest";
 
 type SuggestKeywordResult = {
 	name: string,
+	count?: number
 	url: string
 };
 
-function SuggestResultRow({ name, url }: SuggestKeywordResult) {
+function SuggestResultRow({ name, count, url }: SuggestKeywordResult) {
 	return (
 		<>
 			<td>{name}</td>
+			<td>{count ?? "N/A"}</td>
 			<td><a className="btn btn-sm" href={url}>🔎</a></td>
 		</>
 	);
@@ -38,15 +40,20 @@ export default function SuggestKeywordsPage() {
 	);
 	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
-	function CalcResult(keywords: string[]): SuggestKeywordResult[] {
-		return keywords.map(keyword => {
+	type CalcResultParam = {
+		keywords: string;
+		count?: number;
+	};
+
+	function CalcResult(param: CalcResultParam[]): SuggestKeywordResult[] {
+		return param.map(v => {
 			const serialize = createSerializer(SearchPageQueryModel);
 			const url = serialize("/search", {
 				service: queryParams.service,
-				query: keyword,
+				query: v.keywords,
 				size: queryParams.size,
 			});
-			return { name: keyword, url: url };
+			return { name: v.keywords, url: url, count: v.count };
 		});
 	}
 
@@ -95,21 +102,20 @@ export default function SuggestKeywordsPage() {
 				return;
 			}
 			results.length = 0;
-			
+
 			try {
-				let keywords: string[] = [];
 				if (queryParams.service === "Google") {
-					keywords = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
+					const data = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
+					setResults(CalcResult(data.map((t) => ({ keywords: t }))));
 				} else {
 					if (queryParams.related) {
-						const data = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
-						keywords = data.map(c => c.name);
+						const hashtags = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
+						setResults(CalcResult(hashtags.map((t) => ({ keywords: t.name, count: t.count }))));
 					} else {
 						const hashtags = await FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size);
-						keywords = hashtags.map(t => t.name);
+						setResults(CalcResult(hashtags.map((t) => ({ keywords: t.name, count: t.count }))));
 					}
 				}
-				setResults(CalcResult(keywords));
 			} catch {
 				console.log("Error fetching keywords");
 				setResults([]);
@@ -130,10 +136,10 @@ export default function SuggestKeywordsPage() {
 				<p>検索結果: {results.length}件</p>
 				<div className="max-w-xl">
 					<ResultTable
-						headers={["Keyword", "検索"]}
+						headers={["キーワード", "記事数", "検索"]}
 						rows={
 							results.map(
-								(result) => (<SuggestResultRow name={result.name} url={result.url} />)
+								(result) => (<SuggestResultRow name={result.name} count={result.count} url={result.url} />)
 							)
 						}
 					/>
