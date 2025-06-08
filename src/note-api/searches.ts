@@ -129,7 +129,7 @@ async function FetchNotesByKeyword(
 	let start = 0;
 
 	while (resultNotes.length < size) {
-		const url = `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size - resultNotes.length}&start=${start}&sort=${sort}`
+		const url = `${baseUrl}/api/v3/searches?context=note&q=${encodeURIComponent(query)}&size=${size - resultNotes.length}&start=${start}&sort=${sort}`
 		const result = await axios.get<SearchesResponseModel>(url);
 		if (result.status !== 200) {
 			throw new Error(`Failed to fetch notes: ${result.statusText}`);
@@ -149,7 +149,7 @@ export async function FetchHashtags(baseUrl: string, query: string, size: number
 	let start = 0;
 
 	while (resultHashtags.length < size) {
-		const url = `${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size - resultHashtags.length}&start=${start}`;
+		const url = `${baseUrl}/api/v3/searches?context=hashtag&q=${encodeURIComponent(query)}&size=${size - resultHashtags.length}&start=${start}`;
 		const result = await axios.get<SearchesResponseModel>(url);
 		if (result.status !== 200) {
 			throw new Error(`Failed to fetch hashtags: ${result.statusText}`);

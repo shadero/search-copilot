@@ -23,7 +23,7 @@ export default async function FetchNotesByHashtag(
 
 	let page = 1;
 	while (notes.length < size) {
-		const url = `${baseUrl}/api/v3/hashtags/${hashtag}/notes?order=${sort}&page=${page}&paid_only=${paidOnly}`;
+		const url = `${baseUrl}/api/v3/hashtags/${encodeURIComponent(hashtag)}/notes?order=${sort}&page=${page}&paid_only=${paidOnly}`;
 		const response = await axios.get<NotesApiResponseModel>(url);
 		if (response.status !== 200) {
 			throw new Error(`Error fetching notes: ${response.statusText}`);
