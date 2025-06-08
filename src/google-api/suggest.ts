@@ -37,7 +37,8 @@ const parser = new XMLParser({
 });
 
 async function fetchSuggestionsInternal(baseUrl: string, query: string, hl: string = "ja"): Promise<string[]> {
-	const url = `${baseUrl}/complete/search?output=toolbar&hl=${hl}&q=${query}`;
+	const url = `${baseUrl}/complete/search?output=toolbar&hl=${hl}&q=${encodeURIComponent(query)}`;
+
 	const ax = axios.create({
 		transformResponse: [(data) => {
 			return parser.parse(data);
@@ -45,7 +46,16 @@ async function fetchSuggestionsInternal(baseUrl: string, query: string, hl: stri
 	});
 
 	return ax.get(url).then(response => {
-		return response.data.toplevel.CompleteSuggestion.map(
+		if (response.status !== 200) {
+			throw new Error(`Error fetching suggestions: ${response.statusText}`);
+		}
+		if (!response.data.toplevel.CompleteSuggestion) {
+			return [];
+		}
+		const suggestionsArray = Array.isArray(response.data.toplevel.CompleteSuggestion)
+			? response.data.toplevel.CompleteSuggestion
+			: [response.data.toplevel.CompleteSuggestion];
+		return suggestionsArray.map(
 			(item: any) => {
 				return item.suggestion["@_data"];
 			}
