@@ -24,7 +24,7 @@ export async function fetchSuggestions(baseUrl: string, query: string, size: num
 		}
 	}
 
-	return suggestions.slice(0, size).map(s => s.suggestion);
+	return suggestions.slice(0, Math.min(size, suggestions.length)).map(s => s.suggestion);
 }
 
 const parser = new XMLParser({
