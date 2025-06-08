@@ -23,11 +23,6 @@ export async function FetchRelatedHashtags(
 	query: string,
 ): Promise<RelatedHashtag[]> {
 	const url = `${baseUrl}/api/v2/hashtags/${(query)}`;
-	try {
-		const response = await axios.get<HashtagsResponseModel>(url);
-		return response.data.data.relatedHashtags;
-	} catch (error) {
-		console.error("Error fetching hashtags:", error);
-		throw error;
-	}
+	const response = await axios.get<HashtagsResponseModel>(url);
+	return response.data.data.relatedHashtags;
 }
