@@ -100,7 +100,7 @@ export default function SuggestKeywordsPage() {
 				.catch(() => { setResults([]); });
 		} else {
 			FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size)
-				.then((data) => data.contents.map(c => c.name))
+				.then((hashtags) => hashtags.map(t => t.name))
 				.then(CalcResult)
 				.then(setResults)
 				.catch(() => { setResults([]); });

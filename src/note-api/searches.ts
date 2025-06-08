@@ -126,7 +126,7 @@ async function FetchNotesByKeyword(
 	size: number = 10,
 ): Promise<Note[]> {
 	const resultNotes: Note[] = [];
-	let start = resultNotes.length
+	let start = 0;
 
 	while (resultNotes.length < size) {
 		const url = `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size - resultNotes.length}&start=${start}&sort=${sort}`
@@ -144,15 +144,24 @@ async function FetchNotesByKeyword(
 	return resultNotes;
 }
 
-export async function FetchHashtags(baseUrl: string, query: string, size: number = 10, start: number = 0): Promise<HashtagData> {
-	try {
-		const result = await axios.get<SearchesResponseModel>(
-			`${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size}&start=${start}`
-		);
-		return result.data.data.hashtags;
-	} catch (error) {
-		throw error;
+export async function FetchHashtags(baseUrl: string, query: string, size: number = 10): Promise<Hashtag[]> {
+	const resultHashtags: Hashtag[] = [];
+	let start = 0;
+
+	while (resultHashtags.length < size) {
+		const url = `${baseUrl}/api/v3/searches?context=hashtag&q=${query}&size=${size - resultHashtags.length}&start=${start}`;
+		const result = await axios.get<SearchesResponseModel>(url);
+		if (result.status !== 200) {
+			throw new Error(`Failed to fetch hashtags: ${result.statusText}`);
+		}
+		const foundedHashtags = result.data.data.hashtags.contents;
+		resultHashtags.push(...foundedHashtags);
+		start += foundedHashtags.length;
+		if (result.data.data.hashtags.is_last_page) {
+			break;
+		}
 	}
+	return resultHashtags;
 }
 
 export default FetchNotesByKeyword;
