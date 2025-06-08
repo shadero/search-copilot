@@ -119,6 +119,8 @@ export default function SuggestKeywordsPage() {
 	function MainContent() {
 		return (
 			<>
+				<h1 className="text-2xl font-bold mb-4">キーワードサジェスト</h1>
+				<p className="mb-4" >キーワードを入力すると、キーワードやハッシュタグのサジェストを表示します。</p>
 				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
 				<ServiceSwitch displayServices={Services} service={queryParams.service} setService={(s) => setQueryParams({ service: s })} />
 				<Options />

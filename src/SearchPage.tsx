@@ -138,6 +138,8 @@ export default function SearchPage() {
 	function MainContent() {
 		return (
 			<>
+				<h1 className="text-2xl font-bold mb-4">検索</h1>
+				<p className="mb-4">キーワードを入力すると、関連するWebサイトやノートを表示します。</p>
 				<SearchBar initialQuery={queryParam.query} onSearch={handleSubmit} />
 				<ServiceSwitch displayServices={Services} service={queryParam.service} setService={(s) => setQueryParam({ service: s })} />
 				<SearchOptions queryParam={queryParam} setQueryParam={setQueryParam} />
