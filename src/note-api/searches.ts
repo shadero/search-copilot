@@ -137,7 +137,7 @@ async function FetchNotesByKeyword(
 		const foundedNotes = result.data.data.notes.contents;
 		resultNotes.push(...foundedNotes);
 		start += foundedNotes.length;
-		if (result.data.data.notes.is_last_page) {
+		if (resultNotes.length >= result.data.data.notes.total_count) {
 			break;
 		}
 	}
