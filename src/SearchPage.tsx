@@ -68,7 +68,7 @@ export const SearchPageQueryModel = {
 	service: parseAsStringLiteral(Services).withDefault("Note"),
 	query: parseAsString.withDefault(""),
 	sort: parseAsStringLiteral(SEARCH_SORTS).withDefault("popular"),
-	size: parseAsInteger.withDefault(10),
+	size: parseAsInteger.withDefault(25),
 };
 
 export default function SearchPage() {

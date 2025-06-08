@@ -31,7 +31,7 @@ export default function SuggestKeywordsPage() {
 		{
 			service: parseAsStringLiteral(Services).withDefault("Note"),
 			query: parseAsString.withDefault(""),
-			size: parseAsInteger.withDefault(10),
+			size: parseAsInteger.withDefault(25),
 			related: parseAsBoolean.withDefault(false),
 		},
 		{ history: "push" }
