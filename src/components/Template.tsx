@@ -20,7 +20,7 @@ export default function Template({ body }: { body: React.ReactNode }) {
 							</svg>
 						</label>
 					</div>
-					<div className="mx-2 flex-1 px-2">SEO</div>
+					<div className="mx-2 flex-1 px-2">Search Copilot</div>
 				</div>
 				<div className="p-4">
 					{body}
