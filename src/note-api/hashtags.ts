@@ -18,10 +18,7 @@ type HashtagsResponseModel = {
 	};
 };
 
-export async function FetchRelatedHashtags(
-	baseUrl: string,
-	query: string,
-): Promise<RelatedHashtag[]> {
+export async function FetchRelatedHashtags(baseUrl: string, query: string,): Promise<RelatedHashtag[]> {
 	const url = `${baseUrl}/api/v2/hashtags/${(query)}`;
 	const response = await axios.get<HashtagsResponseModel>(url);
 	return response.data.data.relatedHashtags;
