@@ -9,6 +9,7 @@ import Template from "./components/Template";
 import { SearchPageQueryModel } from "./SearchPage";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 import { fetchSuggestions } from "./google-api/suggest";
+import { set } from "zod/v4";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -90,27 +91,30 @@ export default function SuggestKeywordsPage() {
 
 	useEffect(() => {
 		async function fetchKeywords() {
+			if (queryParams.service == "Note" && queryParams.query.startsWith("#")) {
+				setQueryParams({ query: queryParams.query.slice(1) });
+				return;
+			}
 			try {
 				let keywords: string[] = [];
 				if (queryParams.service === "Google") {
 					keywords = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
-				} else if (queryParams.related) {
-					const data = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
-					keywords = data.map(c => c.name);
 				} else {
-					const hashtags = await FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size);
-					keywords = hashtags.map(t => t.name);
+					if (queryParams.related) {
+						const data = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
+						keywords = data.map(c => c.name);
+					} else {
+						const hashtags = await FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size);
+						keywords = hashtags.map(t => t.name);
+					}
 				}
 				setResults(CalcResult(keywords));
 			} catch {
 				console.log("Error fetching keywords");
-				
 				setResults([]);
 			}
 		}
 		fetchKeywords();
-
-		
 	}, [queryParams]);
 
 	function MainContent() {
