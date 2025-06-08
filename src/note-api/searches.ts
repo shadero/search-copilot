@@ -115,21 +115,33 @@ type CursorData = {
 export const SEARCH_SORTS = ['popular', 'hot', 'new'] as const;
 export type SearchSort = typeof SEARCH_SORTS[number];
 
-async function FetchSearchNotes(
+export function GetNoteUrl(note: Note): string {
+	return `https://note.com/${note.user.urlname}/n/${note.key}`;
+}
+
+async function FetchNotesByKeyword(
 	baseUrl: string,
 	query: string,
 	sort: SearchSort = 'popular',
 	size: number = 10,
-	start: number = 0
-): Promise<NotesData> {
-	const result = await axios.get<SearchesResponseModel>(
-		`${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size}&start=${start}&sort=${sort}`
-	);
-	if (result.status !== 200) {
-		throw new Error(`Failed to fetch notes: ${result.statusText}`);
-	}
+): Promise<Note[]> {
+	const resultNotes: Note[] = [];
+	let start = resultNotes.length
 
-	return result.data.data.notes;
+	while (resultNotes.length < size) {
+		const url = `${baseUrl}/api/v3/searches?context=note&q=${query}&size=${size - resultNotes.length}&start=${start}&sort=${sort}`
+		const result = await axios.get<SearchesResponseModel>(url);
+		if (result.status !== 200) {
+			throw new Error(`Failed to fetch notes: ${result.statusText}`);
+		}
+		const foundedNotes = result.data.data.notes.contents;
+		resultNotes.push(...foundedNotes);
+		start += foundedNotes.length;
+		if (result.data.data.notes.is_last_page) {
+			break;
+		}
+	}
+	return resultNotes;
 }
 
 export async function FetchHashtags(baseUrl: string, query: string, size: number = 10, start: number = 0): Promise<HashtagData> {
@@ -143,4 +155,4 @@ export async function FetchHashtags(baseUrl: string, query: string, size: number
 	}
 }
 
-export default FetchSearchNotes;
+export default FetchNotesByKeyword;

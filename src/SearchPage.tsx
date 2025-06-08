@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import FetchSearchNotes, { SEARCH_SORTS, type SearchSort } from './note-api/searches';
+import FetchNotesByKeyword, { GetNoteUrl, SEARCH_SORTS, type SearchSort } from './note-api/searches';
 import SearchBar from "./components/SearchBar";
 import ResultTable from "./components/ResultTable";
 import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
@@ -118,13 +118,10 @@ export default function SearchPage() {
 		}
 
 		// 通常のキーワード検索
-		const result = FetchSearchNotes(noteApiBaseUrl, query, sort, size)
-			.then(data => {
-				return data.contents.map(
-					note => {
-						const url = `https://note.com/${note.user.urlname}/n/${note.key}`
-						return { name: note.name, url: url } as SearchResult;
-					}
+		const result = FetchNotesByKeyword(noteApiBaseUrl, query, sort, size)
+			.then(notes => {
+				return notes.map(
+					note => { return { name: note.name, url: GetNoteUrl(note) } as SearchResult; }
 				);
 			}).catch(error => {
 				console.error("Error fetching search results:", error);
