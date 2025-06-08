@@ -88,27 +88,28 @@ export default function SuggestKeywordsPage() {
 	};
 
 	useEffect(() => {
-		if (queryParams.service == "Google") {
-			fetchSuggestions(googleBaseUrl, queryParams.query)
-				.then(CalcResult)
-				.then(setResults)
-				.catch(() => { setResults([]); });
-			return;
+		async function fetchKeywords() {
+			try {
+				let keywords: string[] = [];
+				if (queryParams.service === "Google") {
+					keywords = await fetchSuggestions(googleBaseUrl, queryParams.query);
+				} else if (queryParams.related) {
+					const data = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
+					keywords = data.map(c => c.name);
+				} else {
+					const hashtags = await FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size);
+					keywords = hashtags.map(t => t.name);
+				}
+				setResults(CalcResult(keywords));
+			} catch {
+				console.log("Error fetching keywords");
+				
+				setResults([]);
+			}
 		}
+		fetchKeywords();
 
-		if (queryParams.related) {
-			FetchRelatedHashtags(noteBaseUrl, queryParams.query)
-				.then((data) => (data.map(c => c.name)))
-				.then(CalcResult)
-				.then(setResults)
-				.catch(() => { setResults([]); });
-		} else {
-			FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size)
-				.then((hashtags) => hashtags.map(t => t.name))
-				.then(CalcResult)
-				.then(setResults)
-				.catch(() => { setResults([]); });
-		}
+		
 	}, [queryParams]);
 
 	function MainContent() {

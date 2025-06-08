@@ -157,7 +157,7 @@ export async function FetchHashtags(baseUrl: string, query: string, size: number
 		const foundedHashtags = result.data.data.hashtags.contents;
 		resultHashtags.push(...foundedHashtags);
 		start += foundedHashtags.length;
-		if (result.data.data.hashtags.is_last_page) {
+		if (resultHashtags.length >= result.data.data.hashtags.total_count) {
 			break;
 		}
 	}
