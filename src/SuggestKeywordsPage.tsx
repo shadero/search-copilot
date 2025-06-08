@@ -92,7 +92,7 @@ export default function SuggestKeywordsPage() {
 			try {
 				let keywords: string[] = [];
 				if (queryParams.service === "Google") {
-					keywords = await fetchSuggestions(googleBaseUrl, queryParams.query);
+					keywords = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
 				} else if (queryParams.related) {
 					const data = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
 					keywords = data.map(c => c.name);
