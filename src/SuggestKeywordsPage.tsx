@@ -52,29 +52,33 @@ export default function SuggestKeywordsPage() {
 	function Options() {
 		return (
 			<div className="flex gap-4 items-end">
-				<OptionSelectBox
-					name="表示件数"
-					map={{
-						10: "10件",
-						15: "15件",
-						20: "20件",
-						25: "25件",
-						50: "50件",
-					}}
-					onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
-					defaultValue={queryParams.size.toString()}
-				/>
+				{!(queryParams.service == "Note" && queryParams.related == true) &&
+					<OptionSelectBox
+						name="表示件数"
+						map={{
+							10: "10件",
+							15: "15件",
+							20: "20件",
+							25: "25件",
+							50: "50件",
+						}}
+						onChange={(e) => { setQueryParams({ size: parseInt(e.target.value) }); }}
+						defaultValue={queryParams.size.toString()}
+					/>
+				}
 
 				{/* Note Only */}
-				{queryParams.service == "Note" && <OptionSelectBox
-					name="ハッシュタグの種類"
-					map={{
-						false: "サジェストハッシュタグ",
-						true: "関連ハッシュタグ",
-					}}
-					onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
-					defaultValue={queryParams.related.toString()}
-				/>}
+				{queryParams.service == "Note" &&
+					<OptionSelectBox
+						name="ハッシュタグの種類"
+						map={{
+							false: "サジェストハッシュタグ",
+							true: "関連ハッシュタグ",
+						}}
+						onChange={(e) => { setQueryParams({ related: e.target.value === "true" }); }}
+						defaultValue={queryParams.related.toString()}
+					/>
+				}
 			</div>
 		);
 	}
