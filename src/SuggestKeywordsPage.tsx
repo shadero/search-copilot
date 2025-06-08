@@ -42,6 +42,7 @@ export default function SuggestKeywordsPage() {
 		return keywords.map(keyword => {
 			const serialize = createSerializer(SearchPageQueryModel);
 			const url = serialize("/search", {
+				service: queryParams.service,
 				query: keyword,
 				size: queryParams.size,
 			});
