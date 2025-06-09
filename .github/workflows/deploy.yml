@@ -40,9 +40,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_GOOGLE_BASE_URL: "https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://note.com"
-          VITE_GOOGLE_SCRAPE_API_URL: "https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://www.google.co.jp"
-          VITE_NOTE_BASE_URL: "https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/Google-Search"
+          VITE_GOOGLE_BASE_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://www.google.co.jp'
+          VITE_GOOGLE_SCRAPE_API_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/Google-Search'
+          VITE_NOTE_BASE_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://note.com'
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
