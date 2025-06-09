@@ -60,15 +60,6 @@ export default function SuggestKeywordsPage() {
 	);
 	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
-	type CalcResultParam = {
-		keywords: string;
-		count?: number;
-	};
-
-	function CalcResult(param: CalcResultParam[]): SuggestKeywordResult[] {
-		return param.map(v => ({ name: v.keywords, count: v.count }));
-	}
-
 	function Options() {
 		return (
 			<div className="flex gap-4 items-end">
@@ -113,14 +104,14 @@ export default function SuggestKeywordsPage() {
 			try {
 				if (queryParams.service === "Google") {
 					const data = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
-					setResults(CalcResult(data.map((t) => ({ keywords: t }))));
+					setResults(data.map((keyword) => ({ name: keyword })));
 				} else {
 					if (queryParams.related) {
 						const hashtags = await FetchRelatedHashtags(noteBaseUrl, queryParams.query);
-						setResults(CalcResult(hashtags.map((t) => ({ keywords: t.name, count: t.count }))));
+						setResults(hashtags);
 					} else {
 						const hashtags = await FetchHashtags(noteBaseUrl, queryParams.query, queryParams.size);
-						setResults(CalcResult(hashtags.map((t) => ({ keywords: t.name, count: t.count }))));
+						setResults(hashtags);
 					}
 				}
 			} catch {
