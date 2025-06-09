@@ -14,20 +14,37 @@ import { Link } from "react-router-dom";
 type SuggestKeywordResult = {
 	name: string,
 	count?: number
-	url: string
 };
 
-function SuggestResultRow({ name, count, url }: SuggestKeywordResult) {
+function SuggestResultRow({ name, count, queryParams }: { name: string, count?: number, queryParams: SuggestPageQuery }) {
+	const serialize = createSerializer(SearchPageQueryModel);
 	return (
 		<>
 			<td>{name}</td>
 			<td>{count ?? "N/A"}</td>
 			<td>
-				<Link className="btn btn-sm" to={url}> 🔎 </Link>
+				<Link
+					className="btn btn-sm"
+					to={{
+						pathname: "/search",
+						search: serialize({
+							query: name,
+							service: queryParams.service,
+							size: queryParams.size,
+						}),
+					}
+					}> 🔎
+				</Link>
 			</td>
 		</>
 	);
 }
+type SuggestPageQuery = {
+	service: (typeof Services)[number];
+	query: string;
+	size: number;
+	related: boolean;
+};
 
 export default function SuggestKeywordsPage() {
 	const noteBaseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
@@ -49,15 +66,7 @@ export default function SuggestKeywordsPage() {
 	};
 
 	function CalcResult(param: CalcResultParam[]): SuggestKeywordResult[] {
-		return param.map(v => {
-			const serialize = createSerializer(SearchPageQueryModel);
-			const url = serialize("/search", {
-				service: queryParams.service,
-				query: v.keywords,
-				size: queryParams.size,
-			});
-			return { name: v.keywords, url: url, count: v.count };
-		});
+		return param.map(v => ({ name: v.keywords, count: v.count }));
 	}
 
 	function Options() {
@@ -142,7 +151,7 @@ export default function SuggestKeywordsPage() {
 						headers={["キーワード", "記事数", "検索"]}
 						rows={
 							results.map(
-								(result) => (<SuggestResultRow name={result.name} count={result.count} url={result.url} />)
+								(result) => (<SuggestResultRow name={result.name} count={result.count} queryParams={queryParams} />)
 							)
 						}
 					/>
