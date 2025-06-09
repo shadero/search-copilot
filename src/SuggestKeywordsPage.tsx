@@ -100,7 +100,10 @@ export default function SuggestKeywordsPage() {
 
 	useEffect(() => {
 		async function fetchKeywords() {
-			results.length = 0;
+			setResults([]);
+			if (queryParams.query === "") {
+				return;
+			}
 			try {
 				if (queryParams.service === "Google") {
 					const data = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
@@ -116,7 +119,6 @@ export default function SuggestKeywordsPage() {
 				}
 			} catch {
 				console.log("Error fetching keywords");
-				setResults([]);
 			}
 		}
 		fetchKeywords();

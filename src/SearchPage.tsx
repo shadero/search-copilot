@@ -83,6 +83,9 @@ export default function SearchPage() {
 		sort: SearchSort = "popular",
 		size: number = 10
 	): Promise<SearchResult[]> {
+		if (query === "") {
+			return [];
+		}
 		console.log(`Fetching search results for query: ${query}`);
 
 		if (queryParam.service == "Google") {
