@@ -8,6 +8,7 @@ import Template from "./components/Template";
 import FetchNotesByHashtag from "./note-api/searchNotesByHashtag";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 import { FetchSearchResults } from "./google-scrape-api/scrape";
+import { Link } from "react-router-dom";
 
 type SearchResult = {
 	name: string,
@@ -19,7 +20,7 @@ function SearchResultRow({ name, url }: SearchResult) {
 		<>
 			<td>{name}</td>
 			<td>
-				<a className="link link-primary" href={url} target="_blank" rel="noreferrer">Link</a>
+				<Link className="link link-primary" to={url} target="_blank" rel="noreferrer">Link</Link>
 			</td>
 		</>
 	);

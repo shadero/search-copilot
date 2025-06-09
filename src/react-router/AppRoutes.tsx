@@ -9,7 +9,7 @@ import TopPage from "../TopPage";
 
 export default function AppRoutes() {
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename={import.meta.env.BASE_URL}>
 			<Routes>
 				<Route path='/' element={<TopPage />} />
 				<Route path='/search' element={<SearchPage />} />

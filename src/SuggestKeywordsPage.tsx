@@ -9,6 +9,7 @@ import Template from "./components/Template";
 import { SearchPageQueryModel } from "./SearchPage";
 import ServiceSwitch, { Services } from "./components/ServiceSwitch";
 import { fetchSuggestions } from "./google-api/suggest";
+import { Link } from "react-router-dom";
 
 type SuggestKeywordResult = {
 	name: string,
@@ -21,7 +22,9 @@ function SuggestResultRow({ name, count, url }: SuggestKeywordResult) {
 		<>
 			<td>{name}</td>
 			<td>{count ?? "N/A"}</td>
-			<td><a className="btn btn-sm" href={url}>🔎</a></td>
+			<td>
+				<Link className="btn btn-sm" to={url}> 🔎 </Link>
+			</td>
 		</>
 	);
 }
