@@ -40,10 +40,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_GOOGLE_BASE_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://www.google.co.jp'
-          VITE_GOOGLE_SCRAPE_API_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/Google-Search'
-          VITE_NOTE_BASE_URL: 'https://prwm1g4cik.execute-api.ap-northeast-1.amazonaws.com/default/cors-proxy?url=https://note.com'
-      # 404.htmlを生成
+          VITE_GOOGLE_BASE_URL: '${{ vars.VITE_GOOGLE_BASE_URL }}'
+          VITE_GOOGLE_SCRAPE_API_URL: '${{ vars.VITE_GOOGLE_SCRAPE_API_URL }}'
+          VITE_NOTE_BASE_URL: '${{ vars.VITE_NOTE_BASE_URL }}'
       - name: Generate 404.html
         run: cp dist/index.html dist/404.html
       - name: Setup Pages
