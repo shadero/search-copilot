@@ -37,7 +37,7 @@ const parser = new XMLParser({
 });
 
 async function fetchSuggestionsInternal(baseUrl: string, query: string, hl: string = "ja"): Promise<string[]> {
-	const url = `${baseUrl}/complete/search?output=toolbar&hl=${hl}&q=${encodeURIComponent(query)}`;
+	const url = `${baseUrl}/complete/search?&output=toolbar&hl=${hl}&q=${encodeURIComponent(query)}`;
 
 	const ax = axios.create({
 		transformResponse: [(data) => {

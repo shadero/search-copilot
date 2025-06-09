@@ -11,7 +11,7 @@ export async function FetchSearchResults(
 	query: string,
 	size: number = 10
 ): Promise<GoogleSearchResult[]> {
-	const url = `${baseUrl}?query=${encodeURIComponent(query)}&size=${size}`;
+	const url = `${baseUrl}?&query=${encodeURIComponent(query)}&size=${size}`;
 
 	return axios
 		.get<GoogleSearchResult[]>(url, { timeout: 10000, })
