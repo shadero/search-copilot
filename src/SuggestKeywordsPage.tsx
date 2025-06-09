@@ -109,12 +109,7 @@ export default function SuggestKeywordsPage() {
 
 	useEffect(() => {
 		async function fetchKeywords() {
-			if (queryParams.service == "Note" && queryParams.query.startsWith("#")) {
-				setQueryParams({ query: queryParams.query.slice(1) });
-				return;
-			}
 			results.length = 0;
-
 			try {
 				if (queryParams.service === "Google") {
 					const data = await fetchSuggestions(googleBaseUrl, queryParams.query, queryParams.size);
@@ -136,12 +131,20 @@ export default function SuggestKeywordsPage() {
 		fetchKeywords();
 	}, [queryParams]);
 
+	function SearchBarOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const value = e.target.value.trim();
+		if (queryParams.service == "Note" && value.startsWith("#")) {
+			e.target.value = value.replace(/^#+/, "");
+			return;
+		}
+	}
+
 	function MainContent() {
 		return (
 			<>
 				<h1 className="text-2xl font-bold mb-4">キーワードサジェスト</h1>
 				<p className="mb-4" >キーワードを入力すると、キーワードやハッシュタグのサジェストを表示します。</p>
-				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} />
+				<SearchBar initialQuery={queryParams.query} onSearch={handleSearch} onChange={SearchBarOnChange} />
 				<ServiceSwitch displayServices={Services} service={queryParams.service} setService={(s) => setQueryParams({ service: s })} />
 				<Options />
 				<div className="divider"></div>
