@@ -40,9 +40,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_GOOGLE_BASE_URL: ${{ vars.VITE_GOOGLE_BASE_URL }}}}
-          VITE_GOOGLE_SCRAPE_API_URL: ${{ vars.VITE_GOOGLE_SCRAPE_API_URL }}}
-          VITE_NOTE_BASE_URL: ${{ vars.VITE_NOTE_BASE_URL }}}
+          VITE_GOOGLE_BASE_URL: ${{ vars.VITE_GOOGLE_BASE_URL }}
+          VITE_GOOGLE_SCRAPE_API_URL: ${{ vars.VITE_GOOGLE_SCRAPE_API_URL }}
+          VITE_NOTE_BASE_URL: ${{ vars.VITE_NOTE_BASE_URL }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
