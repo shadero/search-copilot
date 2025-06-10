@@ -9,14 +9,13 @@ type ServiceSwitchProps = {
 
 export default function ServiceSwitch({ displayServices, service, setService, }: ServiceSwitchProps) {
 	return (
-		<div className="btn-group flex gap-2 flex-wrap">{
+		<div className="join">{
 			displayServices.map((svc) => (
 				<input
 					key={svc}
 					type="radio"
 					aria-label={svc}
-					className="btn"
-					name="service"
+					className="join-item btn btn-soft"
 					checked={service === svc}
 					onChange={() => setService(svc)}
 				/>
