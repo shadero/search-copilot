@@ -15,7 +15,7 @@ export default function ServiceSwitch({ displayServices, service, setService, }:
 					key={svc}
 					type="radio"
 					aria-label={svc}
-					className="join-item btn btn-soft"
+					className="join-item btn"
 					checked={service === svc}
 					onChange={() => setService(svc)}
 				/>
