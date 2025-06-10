@@ -32,8 +32,18 @@ export default function Template({ body }: { body: React.ReactNode }) {
 				<label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
 				<ul className="menu bg-base-200 min-h-full w-80 p-4">
 					<li><Link to="/">Top</Link></li>
-					<li><Link to="/search">Search</Link></li>
-					<li><Link to="/suggestKeywords">Keyword Suggest</Link></li>
+					<li>
+						<Link
+							to={{ pathname: "/search" }}>
+							Search
+						</Link>
+					</li>
+					<li>
+						<Link
+							to={{ pathname: "/suggestKeywords", }}>
+							Keyword Suggest
+						</Link>
+					</li>
 				</ul>
 			</div>
 		</div>

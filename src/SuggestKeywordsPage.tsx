@@ -39,25 +39,24 @@ function SuggestResultRow({ name, count, queryParams }: { name: string, count?: 
 		</>
 	);
 }
-type SuggestPageQuery = {
+export type SuggestPageQuery = {
 	service: (typeof Services)[number];
 	query: string;
 	size: number;
 	related: boolean;
 };
 
+export const SuggestPageQueryModel = {
+	service: parseAsStringLiteral(Services).withDefault("Note"),
+	query: parseAsString.withDefault(""),
+	size: parseAsInteger.withDefault(25),
+	related: parseAsBoolean.withDefault(false),
+};
+
 export default function SuggestKeywordsPage() {
 	const noteBaseUrl = import.meta.env.VITE_NOTE_BASE_URL as string;
 	const googleBaseUrl = import.meta.env.VITE_GOOGLE_BASE_URL as string;
-	const [queryParams, setQueryParams] = useQueryStates(
-		{
-			service: parseAsStringLiteral(Services).withDefault("Note"),
-			query: parseAsString.withDefault(""),
-			size: parseAsInteger.withDefault(25),
-			related: parseAsBoolean.withDefault(false),
-		},
-		{ history: "push" }
-	);
+	const [queryParams, setQueryParams] = useQueryStates(SuggestPageQueryModel, { history: "push" });
 	const [results, setResults] = useState<SuggestKeywordResult[]>([]);
 
 	function Options() {
