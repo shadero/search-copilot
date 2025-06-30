@@ -43,6 +43,7 @@ jobs:
           VITE_GOOGLE_BASE_URL: '${{ vars.VITE_GOOGLE_BASE_URL }}'
           VITE_GOOGLE_SCRAPE_API_URL: '${{ vars.VITE_GOOGLE_SCRAPE_API_URL }}'
           VITE_NOTE_BASE_URL: '${{ vars.VITE_NOTE_BASE_URL }}'
+          VITE_BASE_PATH: '${{ vars.VITE_BASE_PATH }}'
       - name: Generate 404.html
         run: cp dist/index.html dist/404.html
       - name: Setup Pages
